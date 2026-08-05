@@ -608,6 +608,77 @@
   .foot-links { margin-top: 22px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
   footer .fine { margin-top: 34px; font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.05em; color: rgba(247,243,234,0.35); }
 
+  /* ============ supporter ticker (always-on, bottom of viewport) ============ */
+
+  body { padding-bottom: 44px; } /* keeps the fixed ticker from permanently covering the footer */
+
+  .supporter-ticker {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    height: 44px;
+    display: flex;
+    align-items: stretch;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border-top: 1px solid rgba(255,201,60,0.35);
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.45);
+  }
+  .supporter-ticker__label {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: var(--purple);
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border-right: 1px solid rgba(255,201,60,0.3);
+  }
+  .supporter-ticker__viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .supporter-ticker__track {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    white-space: nowrap;
+    width: max-content;
+    animation: supporter-ticker-scroll linear infinite;
+  }
+  .supporter-ticker__track:hover { animation-play-state: paused; }
+  .supporter-name {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: rgba(247,243,234,0.85);
+    padding: 0 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .supporter-name.is-sub { color: var(--gold); }
+  .supporter-name.is-sub::before { content: "★"; font-size: 10px; }
+  .supporter-ticker__empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: rgba(247,243,234,0.45);
+    white-space: nowrap;
+  }
+  @keyframes supporter-ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); } /* track content is duplicated 2x, so -50% = one seamless loop */
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .supporter-ticker__track { animation: none; overflow-x: auto; }
+  }
+
   .social-row {
     margin-top: 28px;
     display: flex;
@@ -1061,6 +1132,51 @@
   loadClips();
 
   /* ===================================================================
+     3b. SUPPORTER TICKER — reads followers.json ({ "followers": [...],
+     "subscribers": [...] }, both arrays of display names) written by
+     export_followers.py. Subscribers get a gold star + lead the list.
+     Scroll speed is duration-based on total name count (not a fixed
+     pixel speed) so a big list doesn't feel rushed and a short one
+     doesn't crawl forever. Content is duplicated 2x in the track so the
+     -50% keyframe loops seamlessly with no visible seam/jump.
+  =================================================================== */
+  function loadSupporterTicker() {
+    const track = document.getElementById("supporter-ticker-track");
+    const ticker = document.getElementById("supporter-ticker");
+    if (!track || !ticker) return;
+
+    fetch("followers.json", { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("no followers.json"); return r.json(); })
+      .then(data => {
+        const subs = Array.isArray(data.subscribers) ? data.subscribers : [];
+        const followers = Array.isArray(data.followers) ? data.followers : [];
+        const combined = [
+          ...subs.map(name => ({ name, isSub: true })),
+          ...followers.map(name => ({ name, isSub: false })),
+        ];
+
+        if (!combined.length) {
+          ticker.querySelector(".supporter-ticker__viewport").innerHTML =
+            `<div class="supporter-ticker__empty mono">Be the first to follow — twitch.tv/goetzmoney</div>`;
+          return;
+        }
+
+        const nameSpan = s => `<span class="supporter-name${s.isSub ? " is-sub" : ""}">${s.name}</span>`;
+        // Duplicated twice back-to-back — required for the seamless
+        // -50%-translateX loop, not just for padding out a short list.
+        track.innerHTML = combined.map(nameSpan).join("") + combined.map(nameSpan).join("");
+
+        const duration = Math.max(20, combined.length * 3); // seconds
+        track.style.animationDuration = `${duration}s`;
+      })
+      .catch(() => {
+        ticker.querySelector(".supporter-ticker__viewport").innerHTML =
+          `<div class="supporter-ticker__empty mono">Be the first to follow — twitch.tv/goetzmoney</div>`;
+      });
+  }
+  loadSupporterTicker();
+
+  /* ===================================================================
      4. FEATURED VIDEO (latest VOD / highlight)
      -------------------------------------------------------------------
      Reads featured_video.json -- { "platform": "youtube"|"twitch",
@@ -1088,6 +1204,14 @@
   }
   loadFeaturedVideo();
 </script>
+
+<!-- ============ SUPPORTER TICKER (always-on, bottom of viewport) ============ -->
+<div class="supporter-ticker" id="supporter-ticker">
+  <div class="supporter-ticker__label comic">Thank You ★</div>
+  <div class="supporter-ticker__viewport">
+    <div class="supporter-ticker__track mono" id="supporter-ticker-track"></div>
+  </div>
+</div>
 
 </body>
 </html>
