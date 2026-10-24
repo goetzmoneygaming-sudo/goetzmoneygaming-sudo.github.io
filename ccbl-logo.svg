@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480">
+  <defs>
+    <radialGradient id="ball" cx="38%" cy="34%" r="80%">
+      <stop offset="0%" stop-color="#F79A3C"/>
+      <stop offset="55%" stop-color="#EE7417"/>
+      <stop offset="100%" stop-color="#CE5606"/>
+    </radialGradient>
+    <path id="arcTop" d="M 240,240 m -198,0 a 198,198 0 1,1 396,0" fill="none"/>
+    <path id="arcBottom" d="M 68.5,339 A 198,198 0 0 0 411.5,339" fill="none"/>
+  </defs>
+
+  <!-- outer badge ring -->
+  <circle cx="240" cy="240" r="234" fill="#2B1054"/>
+  <circle cx="240" cy="240" r="234" fill="none" stroke="#FFC93C" stroke-width="5"/>
+  <circle cx="240" cy="240" r="168" fill="none" stroke="#FFC93C" stroke-width="2.5" opacity="0.85"/>
+
+  <!-- ring text -->
+  <text font-family="Arial Black, Arial, sans-serif" font-size="29" font-weight="900"
+        fill="#F7F3EA" letter-spacing="5">
+    <textPath href="#arcTop" startOffset="25%" text-anchor="middle">CHURCH CARPET</textPath>
+  </text>
+  <text font-family="Arial Black, Arial, sans-serif" font-size="24" font-weight="900"
+        fill="#F7F3EA" letter-spacing="3.5">
+    <textPath href="#arcBottom" startOffset="50%" text-anchor="middle">BASKETBALL LEAGUE</textPath>
+  </text>
+  <circle cx="52" cy="240" r="4.5" fill="#FFC93C"/>
+  <circle cx="428" cy="240" r="4.5" fill="#FFC93C"/>
+
+  <!-- the ball -->
+  <circle cx="240" cy="240" r="152" fill="url(#ball)"/>
+  <g fill="none" stroke="#2B1054" stroke-width="7">
+    <path d="M 240,88 C 208,170 208,310 240,392"/>
+    <path d="M 88,240 C 170,212 310,212 392,240"/>
+    <path d="M 128,142 C 178,240 178,240 128,338"/>
+    <path d="M 352,142 C 302,240 302,240 352,338"/>
+  </g>
+  <circle cx="240" cy="240" r="152" fill="none" stroke="#2B1054" stroke-width="6"/>
+
+  <!-- center banner -->
+  <g>
+    <polygon points="52,206 428,206 452,240 428,274 52,274 28,240" fill="#2B1054"/>
+    <polygon points="52,206 428,206 452,240 428,274 52,274 28,240" fill="none"
+             stroke="#FFC93C" stroke-width="4"/>
+    <text x="240" y="259" text-anchor="middle"
+          font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900"
+          fill="#FFC93C" letter-spacing="6">CCBL</text>
+  </g>
+</svg>
