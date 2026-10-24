@@ -468,6 +468,8 @@
   .sched-day .t { margin-top: 6px; font-family: "Rajdhani", sans-serif; font-weight: 700; font-size: 20px; color: var(--gold); }
   .sched-day.maybe .t { color: var(--gold); text-shadow: 0 0 12px rgba(255,201,60,0.6); }
   .sched-note { margin-top: 18px; font-size: 13px; color: rgba(247,243,234,0.55); }
+  .sched-day .s { margin-top: 4px; font-family: "JetBrains Mono", monospace; font-size: 9.5px; letter-spacing: 0.04em; line-height: 1.35; color: rgba(247,243,234,0.55); }
+  .sched-day.event { border-color: rgba(123,63,212,0.85); background: rgba(123,63,212,0.10); }
 
   .countdown { margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,201,60,0.15); }
   .countdown-label { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
@@ -774,6 +776,9 @@
   }
   .cache-corner-fact.fading { opacity: 0; }
 
+  .cache-says { position: relative; margin-top: 24px; padding-top: 20px; border-top: 1px dashed rgba(111,245,240,0.35); }
+  .cache-says-meta { margin-top: 6px; font-size: 10.5px; letter-spacing: 0.06em; color: rgba(111,245,240,0.55); }
+
   /* ============ clips + featured video ============ */
 
   .clips-grid {
@@ -788,6 +793,25 @@
     color: rgba(247,243,234,0.5);
     padding: 20px 0;
   }
+
+  /* latest-from-the-stream strip (Phase 1) */
+  .latest-strip-items { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 22px; align-items: stretch; }
+  .latest-strip-items .clip-card { width: 132px; flex: 0 0 auto; }
+  .latest-strip-empty { font-size: 13px; color: rgba(247,243,234,0.5); padding: 6px 0 2px; }
+  .latest-highlight-chip {
+    display: flex; align-items: center; gap: 12px;
+    flex: 1 1 260px; max-width: 460px;
+    padding: 14px 18px;
+    background: rgba(255,201,60,0.07);
+    border: 1px solid rgba(255,201,60,0.35);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: transform 160ms ease, border-color 160ms ease;
+  }
+  .latest-highlight-chip:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .latest-highlight-chip .play { font-size: 20px; color: var(--gold); }
+  .latest-highlight-chip .hl-title { display: block; font-family: "Rajdhani", sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--cream); }
+  .latest-highlight-chip .hl-sub { display: block; font-family: "JetBrains Mono", monospace; font-size: 10.5px; letter-spacing: 0.05em; color: rgba(247,243,234,0.55); margin-top: 2px; }
   .clip-card {
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,201,60,0.2);
@@ -996,6 +1020,20 @@
   </div>
 </section>
 
+<!-- ============ LATEST FROM THE STREAM (Phase 1 strip) ============ -->
+<section id="latest" class="wrap circuit-bg">
+  <div class="panel-shell">
+    <div class="panel-glow"></div>
+    <div class="panel">
+      <span class="eyebrow">Just Dropped</span>
+      <h2 class="section-title display">Latest From The Stream</h2>
+      <div class="latest-strip-items" id="latest-strip">
+        <p class="latest-strip-empty mono">Fresh clips and the newest highlight land here after each stream — catch the next one live, Sundays 8PM CT.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ABOUT ============ -->
 <section id="about" class="wrap circuit-bg">
   <div class="panel-shell">
@@ -1030,20 +1068,23 @@
     <div class="panel-glow"></div>
     <div class="panel">
       <span class="eyebrow">Catch The Stream</span>
-      <h2 class="section-title display">Schedule</h2>
-      <div class="sched-grid">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
+        <h2 class="section-title display" style="margin-bottom:0;">Schedule</h2>
+        <img src="ccbl-logo.svg" alt="Church Carpet Basketball League" style="height:96px;width:96px;flex:none;">
+      </div>
+      <div class="sched-grid" id="sched-grid">
         <div class="sched-day"><div class="d">Mon</div><div class="t">—</div></div>
         <div class="sched-day"><div class="d">Tue</div><div class="t">—</div></div>
         <div class="sched-day"><div class="d">Wed</div><div class="t">—</div></div>
-        <div class="sched-day"><div class="d">Thu</div><div class="t">—</div></div>
+        <div class="sched-day event"><div class="d">Thu</div><div class="t">Hoops</div><div class="s">Church Carpet Basketball League</div></div>
         <div class="sched-day maybe"><div class="d">Fri</div><div class="t">?</div></div>
-        <div class="sched-day maybe"><div class="d">Sat</div><div class="t">?</div></div>
+        <div class="sched-day event"><div class="d">Sat</div><div class="t">2PM</div><div class="s">D&amp;D — Age of Ashes with Cache</div></div>
         <div class="sched-day live"><div class="d">Sun</div><div class="t">8PM</div></div>
       </div>
-      <p class="sched-note mono">Sundays 8PM CT — that's the show. Fri/Sat streams happen when they happen; check Discord/Twitch.</p>
+      <p class="sched-note mono" id="sched-note">Sundays 8PM CT — gaming night. Thursdays 6:30PM — Church Carpet Basketball League from Peace Reform Church. Saturdays 2PM — D&amp;D: Age of Ashes, Cache runs the table. All times CT.</p>
 
       <div class="countdown" id="stream-countdown">
-        <span class="countdown-label mono">Next Stream In</span>
+        <span class="countdown-label mono" id="cd-label">Next Stream In</span>
         <div class="countdown-boxes">
           <div class="countdown-box"><span class="countdown-num" id="cd-days">--</span><span class="countdown-unit">days</span></div>
           <div class="countdown-box"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-unit">hrs</span></div>
@@ -1170,6 +1211,11 @@
         <span class="cache-corner-label mono">Cache's Corner</span>
         <p class="cache-corner-fact" id="cache-corner-fact">Loading a fact…</p>
       </div>
+      <div class="cache-says" id="cache-says" hidden>
+        <span class="cache-corner-label mono">Cache Says</span>
+        <p class="cache-corner-fact" id="cache-says-line"></p>
+        <div class="cache-says-meta mono" id="cache-says-meta"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1211,6 +1257,7 @@
   </div>
   <div class="social-row" id="social-icons-footer"></div>
   <p class="fine">Goetz Money · wired to win, occasionally to lose gracefully</p>
+  <p class="fine">18+ content — adults only.</p>
 </footer>
 
 <!-- ============ SUPPORTER TICKER (always-on, bottom of viewport) ============
@@ -1532,13 +1579,18 @@
      breaks the page.
   =================================================================== */
   /* ===================================================================
-     STREAM COUNTDOWN — counts down to the next Sunday 8pm Central,
-     the one FIXED stream day (Fri/Sat are maybes, so they're
-     deliberately not counted down to). Central specifically requested,
-     computed DST-safe via an Intl round-trip (construct a guess in UTC,
-     check what Chicago wall time it actually lands on, correct once for
+     STREAM COUNTDOWN + SCHEDULE — both are driven by schedule.json
+     (Phase 1): the grid, the note under it, the countdown label, and
+     the countdown target(s) all come from that one file, which sits
+     next to index.html. The countdown targets the next FIXED stream
+     (Sundays 8pm Central — Fri/Sat are maybes, so they're deliberately
+     not counted down to). Central specifically requested, computed
+     DST-safe via an Intl round-trip (construct a guess in UTC, check
+     what Chicago wall time it actually lands on, correct once for
      CST vs CDT) rather than a hardcoded UTC offset that would silently
-     be wrong for half the year.
+     be wrong for half the year. If schedule.json can't be loaded, the
+     page falls back to the static markup + the built-in Sunday 8pm
+     target below, exactly as it behaved before the feed existed.
   =================================================================== */
   function chicagoParts(date) {
     const fmt = new Intl.DateTimeFormat("en-US", {
@@ -1551,35 +1603,43 @@
     return parts;
   }
 
+  // Countdown targets — schedule.json replaces these when it loads
+  // (see loadSchedule below). Built-in default = the pre-feed behavior:
+  // Sundays 8pm Central, the one fixed stream.
+  let STREAM_TARGETS = [{ weekday: 0, hour: 20, minute: 0 }];
+
   function nextStreamTargetUTC() {
     const WEEKDAY = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-    const STREAM_WEEKDAYS = [0]; // Sun — the one fixed stream day
-    const STREAM_HOUR = 20; // 8pm Central
 
     const now = new Date();
     const nowParts = chicagoParts(now);
     const curWeekday = WEEKDAY[nowParts.weekday];
     const curHour = parseInt(nowParts.hour, 10);
+    const curMin = parseInt(nowParts.minute, 10);
 
-    let bestDaysAhead = null;
-    for (const sd of STREAM_WEEKDAYS) {
-      let daysAhead = (sd - curWeekday + 7) % 7;
-      if (daysAhead === 0 && curHour >= STREAM_HOUR) daysAhead = 7; // today's already passed
-      if (bestDaysAhead === null || daysAhead < bestDaysAhead) bestDaysAhead = daysAhead;
+    let best = null;
+    for (const t of STREAM_TARGETS) {
+      let daysAhead = (t.weekday - curWeekday + 7) % 7;
+      if (daysAhead === 0 && (curHour > t.hour || (curHour === t.hour && curMin >= t.minute))) {
+        daysAhead = 7; // today's start time has already passed
+      }
+      const score = daysAhead * 1440 + t.hour * 60 + t.minute;
+      if (!best || score < best.score) best = { daysAhead, hour: t.hour, minute: t.minute, score };
     }
 
-    const guessDate = new Date(now.getTime() + bestDaysAhead * 24 * 3600 * 1000);
+    const guessDate = new Date(now.getTime() + best.daysAhead * 24 * 3600 * 1000);
     const targetYMD = chicagoParts(guessDate);
 
     function buildUTC(offsetHours) {
       return new Date(Date.UTC(
         parseInt(targetYMD.year, 10), parseInt(targetYMD.month, 10) - 1, parseInt(targetYMD.day, 10),
-        STREAM_HOUR - offsetHours, 0, 0
+        best.hour - offsetHours, best.minute, 0
       ));
     }
 
     let candidate = buildUTC(-6); // CST guess
-    if (parseInt(chicagoParts(candidate).hour, 10) !== STREAM_HOUR) {
+    const landed = chicagoParts(candidate);
+    if (parseInt(landed.hour, 10) !== best.hour || parseInt(landed.minute, 10) !== best.minute) {
       candidate = buildUTC(-5); // DST correction to CDT
     }
     return candidate;
@@ -1605,6 +1665,45 @@
   }
   tickCountdown();
   setInterval(tickCountdown, 1000);
+
+  /* ===================================================================
+     SCHEDULE FEED — schedule.json is the single source for the grid,
+     the note under it, the countdown label, and the countdown targets.
+     Hand-maintained for now (edit the JSON, push, done) — same pattern
+     as featured_video.json. The static markup in the Schedule section
+     already mirrors this file, so a failed fetch just leaves the
+     shipped markup in charge.
+  =================================================================== */
+  function renderSchedule(data) {
+    const grid = document.getElementById("sched-grid");
+    if (grid && Array.isArray(data.days) && data.days.length) {
+      grid.innerHTML = data.days.map(d => {
+        const cls = d.status && d.status !== "off" ? `sched-day ${d.status}` : "sched-day";
+        const sub = d.label ? `<div class="s">${d.label}</div>` : "";
+        return `<div class="${cls}"><div class="d">${d.day || ""}</div><div class="t">${d.time || "—"}</div>${sub}</div>`;
+      }).join("");
+    }
+    const note = document.getElementById("sched-note");
+    if (note && data.note) note.textContent = data.note;
+    const label = document.getElementById("cd-label");
+    if (label && data.countdown && data.countdown.label) label.textContent = data.countdown.label;
+  }
+
+  function loadSchedule() {
+    fetch("schedule.json", { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("no schedule.json"); return r.json(); })
+      .then(data => {
+        renderSchedule(data);
+        const targets = data.countdown && Array.isArray(data.countdown.targets) ? data.countdown.targets : [];
+        const valid = targets.filter(t => Number.isInteger(t.weekday) && Number.isInteger(t.hour));
+        if (valid.length) {
+          STREAM_TARGETS = valid.map(t => ({ weekday: t.weekday, hour: t.hour, minute: Number.isInteger(t.minute) ? t.minute : 0 }));
+          tickCountdown(); // re-aim immediately instead of waiting a second
+        }
+      })
+      .catch(() => { /* static markup + default target stay in charge */ });
+  }
+  loadSchedule();
 
   function loadLiveStatus() {
     const badge = document.getElementById("live-badge");
@@ -1687,6 +1786,58 @@
       });
   }
   loadCacheCorner();
+
+  /* ===================================================================
+     2b. CACHE SAYS — recent real lines from Cache herself, rotated in
+     the Cache's Corner area. Reads cache_said.json, the site export of
+     the cache_said.jsonl transcript the speech-log build writes on the
+     stream PC: { "lines": [ { "text": str, "kind": str, "ts": str } ] }
+     (plain strings are also accepted). The block stays hidden unless
+     the feed actually has lines — no invented quotes, ever. Until the
+     PC-side exporter exists, this file ships with an empty lines array
+     and the block simply never appears.
+  =================================================================== */
+  let cacheSaidLines = [];
+  let cacheSaidIndex = 0;
+
+  function showNextCacheSaid() {
+    const wrap = document.getElementById("cache-says");
+    const el = document.getElementById("cache-says-line");
+    if (!wrap || !el || !cacheSaidLines.length) return;
+    el.classList.add("fading");
+    setTimeout(() => {
+      const line = cacheSaidLines[cacheSaidIndex % cacheSaidLines.length];
+      cacheSaidIndex++;
+      el.textContent = typeof line === "string" ? line : (line.text || "");
+      const meta = document.getElementById("cache-says-meta");
+      if (meta) {
+        const bits = [];
+        if (line && line.ts) {
+          const d = new Date(line.ts);
+          if (!isNaN(d)) bits.push(d.toLocaleDateString("en-US", { month: "short", day: "numeric" }));
+        }
+        if (line && line.kind) bits.push(line.kind);
+        meta.textContent = bits.join(" · ");
+      }
+      el.classList.remove("fading");
+    }, 300);
+  }
+
+  function loadCacheSaid() {
+    fetch("cache_said.json", { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error("no cache_said.json"); return r.json(); })
+      .then(data => {
+        const lines = Array.isArray(data) ? data : (Array.isArray(data.lines) ? data.lines : []);
+        cacheSaidLines = lines.filter(l => (typeof l === "string" ? l.trim().length > 0 : !!(l && l.text)));
+        if (!cacheSaidLines.length) return; // block stays hidden
+        const wrap = document.getElementById("cache-says");
+        if (wrap) wrap.hidden = false;
+        showNextCacheSaid();
+        setInterval(showNextCacheSaid, 8000);
+      })
+      .catch(() => { /* no feed, no block — by design */ });
+  }
+  loadCacheSaid();
 
   /* ===================================================================
      3. LATEST CLIPS GRID
@@ -1794,6 +1945,56 @@
       .catch(() => { /* leave the empty-state message */ });
   }
   loadFeaturedVideo();
+
+  /* ===================================================================
+     5. LATEST-FROM-THE-STREAM STRIP — the slim band under the hero.
+     Reads the same two manifests as the full sections above
+     (clips.json + featured_video.json) so the freshest content shows
+     up top the moment either file gains an entry. Both empty (today)
+     leaves the strip's quiet empty-state line in place; the full
+     embeds still live in their own sections further down.
+  =================================================================== */
+  function loadLatestStrip() {
+    const strip = document.getElementById("latest-strip");
+    if (!strip) return;
+    const get = name => fetch(name, { cache: "no-store" })
+      .then(r => r.ok ? r.json() : null).catch(() => null);
+    Promise.all([get("clips.json"), get("featured_video.json")]).then(([clips, featured]) => {
+      const items = [];
+      if (featured && featured.id) {
+        const watchUrl = featured.platform === "youtube"
+          ? `https://www.youtube.com/watch?v=${featured.id}`
+          : featured.platform === "twitch"
+            ? `https://www.twitch.tv/videos/${featured.id}`
+            : null;
+        if (watchUrl) {
+          items.push(`
+            <a class="latest-highlight-chip" href="${watchUrl}" target="_blank" rel="noopener">
+              <span class="play">▶</span>
+              <span>
+                <span class="hl-title">Latest Highlight</span>
+                <span class="hl-sub">watch the newest full video</span>
+              </span>
+            </a>
+          `);
+        }
+      }
+      if (Array.isArray(clips)) {
+        clips.slice(0, 4).forEach(c => {
+          const tag = c.url ? "a" : "div";
+          const hrefAttr = c.url ? `href="${c.url}" target="_blank" rel="noopener"` : "";
+          items.push(`
+            <${tag} class="clip-card" ${hrefAttr}>
+              <img class="clip-thumb" src="${c.thumbnail || ''}" alt="" loading="lazy">
+              <div class="clip-caption">${c.caption || ""}</div>
+            </${tag}>
+          `);
+        });
+      }
+      if (items.length) strip.innerHTML = items.join("");
+    });
+  }
+  loadLatestStrip();
 </script>
 
 </body>
