@@ -986,12 +986,88 @@
 
   :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
+
+  /* ============ top tab nav (sticky) — to add a future page tab, add one <a> line in .gm-nav-links ============ */
+  .gm-nav {
+    position: sticky; top: 0; z-index: 900;
+    background: linear-gradient(180deg, rgba(26,16,48,0.98), rgba(18,10,31,0.98));
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  .gm-nav-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 10px;
+    display: flex; align-items: stretch; gap: 4px;
+  }
+  .gm-nav-brand {
+    display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+    padding: 6px 10px 6px 4px; text-decoration: none;
+  }
+  .gm-nav-brand img { width: 36px; height: 36px; object-fit: contain; display: block; }
+  .gm-nav-brand span {
+    font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 19px; color: var(--cream); white-space: nowrap;
+  }
+  .gm-nav-brand span b { color: var(--gold); font-weight: 700; }
+  .gm-nav-links {
+    display: flex; align-items: stretch; gap: 2px; margin-left: auto;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .gm-nav-links::-webkit-scrollbar { display: none; }
+  .gm-nav-links a {
+    display: flex; align-items: center; min-height: 52px; padding: 4px 11px;
+    font-family: "Rajdhani", sans-serif; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 15.5px; color: rgba(247,243,234,0.82);
+    text-decoration: none; white-space: nowrap; position: relative;
+  }
+  .gm-nav-links a:hover { color: var(--gold); }
+  .gm-nav-links a.active { color: var(--gold); }
+  .gm-nav-links a.active::after {
+    content: ""; position: absolute; left: 9px; right: 9px; bottom: 5px;
+    height: 3px; border-radius: 2px; background: var(--gold);
+  }
+  .gm-nav-links a.gm-nav-live {
+    align-self: center; min-height: 44px; margin-left: 8px; padding: 4px 14px;
+    background: var(--purple-2); color: #fff; border-radius: 8px; font-weight: 700;
+  }
+  .gm-nav-links a.gm-nav-live:hover { background: var(--gold); color: var(--ink); }
+  .gm-nav-links a.gm-nav-live.active { color: #fff; }
+  .gm-nav-links a.gm-nav-live.active::after { display: none; }
+  section[id] { scroll-margin-top: 72px; }
+  @media (max-width: 760px) {
+    .gm-nav-brand span { display: none; }
+    .gm-nav-links a { min-height: 48px; font-size: 15px; padding: 4px 10px; }
+    section[id] { scroll-margin-top: 64px; }
+  }
 </style>
 </head>
 <body>
+<!-- ============ TOP TAB NAV (sticky) ============ -->
+<nav class="gm-nav" aria-label="Site sections">
+  <div class="gm-nav-inner">
+    <a class="gm-nav-brand" href="#top" aria-label="Goetz Money — back to top">
+      <img src="coin-badge.png" alt="">
+      <span>Goetz<b>Money</b></span>
+    </a>
+    <div class="gm-nav-links" id="gm-nav-links">
+      <a href="#top">Home</a>
+      <a href="#latest">Latest</a>
+      <a href="#about">About</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#merch">Merch</a>
+      <a href="#stats">Stats</a>
+      <a href="#heroes">Heroes</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#cache-section">Cache</a>
+      <a href="#clips">Clips</a>
+      <a href="#featured-video">Highlight</a>
+      <a class="gm-nav-live" href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch Live</a>
+    </div>
+  </div>
+</nav>
+
 
 <!-- ============ HERO ============ -->
-<section class="hero">
+<section class="hero" id="top">
   <video class="hero-video-bg" autoplay muted loop playsinline poster="hero-poster.jpg">
     <source src="title-screen.mp4" type="video/mp4">
   </video>
@@ -1997,5 +2073,37 @@
   loadLatestStrip();
 </script>
 
+
+<script>
+  /* ============ top tab nav — scrollspy (highlights the tab for the section in view) ============ */
+  (function () {
+    var wrap = document.getElementById('gm-nav-links');
+    if (!wrap || !('IntersectionObserver' in window)) return;
+    var links = Array.prototype.slice.call(wrap.querySelectorAll('a[href^="#"]'));
+    var byId = {};
+    links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
+    var visible = {};
+    function setActive(id) {
+      var active = byId[id];
+      if (!active) return;
+      links.forEach(function (a) { a.classList.toggle('active', a === active); });
+      if (wrap.scrollWidth > wrap.clientWidth) {
+        var lr = active.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+        wrap.scrollBy({ left: (lr.left + lr.width / 2) - (wr.left + wr.width / 2), behavior: 'smooth' });
+      }
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting; });
+      for (var i = 0; i < links.length; i++) {
+        var id = links[i].getAttribute('href').slice(1);
+        if (visible[id]) { setActive(id); break; }
+      }
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    links.forEach(function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if (el) observer.observe(el);
+    });
+  })();
+</script>
 </body>
 </html>
