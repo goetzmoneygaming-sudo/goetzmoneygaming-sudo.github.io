@@ -60,11 +60,7 @@
         position: relative;
         max-width: 1060px;
         margin: 0 auto;
-        background:
-          radial-gradient(340px 200px at 12% 22%, rgba(163, 127, 39, 0.10), transparent 70%),
-          radial-gradient(420px 260px at 88% 68%, rgba(92, 112, 80, 0.13), transparent 70%),
-          radial-gradient(300px 300px at 70% 12%, rgba(120, 84, 40, 0.08), transparent 70%),
-          linear-gradient(160deg, #efdfba 0%, var(--parchment) 45%, var(--parchment-2) 100%);
+        background: linear-gradient(168deg, var(--parchment) 0%, var(--parchment-2) 100%);
         border-radius: 4px;
         box-shadow:
           0 30px 80px rgba(0, 0, 0, 0.65),
@@ -93,7 +89,7 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        opacity: 0.5;
+        opacity: 0.2;
         mix-blend-mode: multiply;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.45 0 0 0 0 0.33 0 0 0 0 0.16 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
       }
@@ -153,7 +149,6 @@
         line-height: 1.04;
         color: var(--ink);
         margin: 14px 0 2px;
-        text-shadow: 0 1px 0 rgba(255, 248, 225, 0.7);
       }
       h1.title .age {
         display: block;
@@ -286,7 +281,7 @@
         margin: 30px auto 4px;
         max-width: 780px;
         border: 1px solid rgba(163, 127, 39, 0.55);
-        background: linear-gradient(170deg, rgba(255, 250, 232, 0.35), rgba(120, 90, 40, 0.06));
+        background: linear-gradient(170deg, rgba(255, 250, 232, 0.14), rgba(120, 90, 40, 0.06));
         padding: 10px 12px 4px;
       }
       .map-wrap svg { display: block; width: 100%; height: auto; }
@@ -307,7 +302,7 @@
       }
       .card {
         position: relative;
-        background: linear-gradient(165deg, rgba(255, 251, 238, 0.55), rgba(213, 189, 138, 0.25));
+        background: linear-gradient(165deg, rgba(255, 251, 238, 0.22), rgba(213, 189, 138, 0.20));
         border: 1px solid rgba(163, 127, 39, 0.6);
         box-shadow: 0 6px 16px rgba(64, 38, 15, 0.18), inset 0 0 30px rgba(163, 127, 39, 0.08);
         padding: 24px 24px 20px;
@@ -349,7 +344,15 @@
       }
       .card.cache::before { border-color: rgba(143, 233, 247, 0.22); }
       .card.cache .role { color: var(--crt-dim); }
-      .card.cache h3 { color: var(--crt); text-shadow: 0 0 14px rgba(143, 233, 247, 0.45); }
+      .card.cache h3 {
+        color: var(--crt);
+        text-shadow:
+          -1px -1px 0 rgba(2, 8, 10, 0.9), 1px -1px 0 rgba(2, 8, 10, 0.9),
+          -1px 1px 0 rgba(2, 8, 10, 0.9), 1px 1px 0 rgba(2, 8, 10, 0.9),
+          0 -1px 0 rgba(2, 8, 10, 0.9), 0 1px 0 rgba(2, 8, 10, 0.9),
+          -1px 0 0 rgba(2, 8, 10, 0.9), 1px 0 0 rgba(2, 8, 10, 0.9),
+          0 0 14px rgba(143, 233, 247, 0.35);
+      }
       .card.cache p { color: #a9cdd6; }
       .card.cache p b { color: #e6fbff; }
       .card.cache .eyes {
@@ -443,6 +446,36 @@
       footer.page-foot .fine { font-size: 15.5px; font-style: italic; margin-top: 4px; }
       footer.page-foot a { color: var(--gold); }
       footer.page-foot a:hover { color: var(--sage-ink); }
+
+      /* ============ ink outline — non-black lettering pops ============ */
+      /* display lettering: full eight-direction outline */
+      h1.title .age,
+      .sec-head h2,
+      .card h3,
+      .how h3,
+      footer.page-foot .foot-title,
+      .premise-copy .drop::first-letter {
+        text-shadow:
+          -1px -1px 0 rgba(20, 13, 5, 0.85), 1px -1px 0 rgba(20, 13, 5, 0.85),
+          -1px 1px 0 rgba(20, 13, 5, 0.85), 1px 1px 0 rgba(20, 13, 5, 0.85),
+          0 -1px 0 rgba(20, 13, 5, 0.85), 0 1px 0 rgba(20, 13, 5, 0.85),
+          -1px 0 0 rgba(20, 13, 5, 0.85), 1px 0 0 rgba(20, 13, 5, 0.85);
+      }
+      /* small caps, labels, stamps, links: lighter four-direction outline */
+      .eyebrow,
+      .backbar a,
+      .showtimes .k,
+      .card .role,
+      .how .num,
+      .card.fourth .reveal,
+      .btn-sage,
+      footer.page-foot a,
+      .card.cache p,
+      .card.cache p b {
+        text-shadow:
+          -1px -1px 0 rgba(20, 13, 5, 0.55), 1px -1px 0 rgba(20, 13, 5, 0.55),
+          -1px 1px 0 rgba(20, 13, 5, 0.55), 1px 1px 0 rgba(20, 13, 5, 0.55);
+      }
 
       @media (max-width: 640px) {
         body { padding: 18px 8px 40px; font-size: 18px; }
