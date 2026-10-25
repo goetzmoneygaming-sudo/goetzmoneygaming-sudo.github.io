@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Cache's D&D: Age of Ashes — a Pathfinder 2e campaign run by Cache, an AI dungeon master, with one human player hearing everything for the first time. Saturdays 2:00–3:00 PM CT on Twitch." />
+    <meta property="og:title" content="Cache's D&D: Age of Ashes — GoetzMoney" />
+    <meta property="og:description" content="One machine runs the world. One human walks into it blind. Saturdays 2:00–3:00 PM CT on twitch.tv/goetzmoney." />
+    <meta property="og:image" content="hero-poster.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <title>Cache's D&amp;D: Age of Ashes — GoetzMoney</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --table: #171009;
+        --parchment: #eadbb6;
+        --parchment-2: #e2cfa3;
+        --parchment-deep: #d5bd8a;
+        --sage: #5c7050;
+        --sage-deep: #3c4c34;
+        --sage-ink: #2b3824;
+        --gold: #a37f27;
+        --gold-bright: #c9a227;
+        --gold-pale: #e7cd7e;
+        --ink: #2e2113;
+        --ink-soft: #5d4830;
+        --burn: #40260f;
+        --cabinet: #0c1f26;
+        --cabinet-line: #2b5a68;
+        --crt: #8fe9f7;
+        --crt-dim: #3fa7bd;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        background:
+          radial-gradient(1200px 700px at 50% -10%, #2b1d0e 0%, transparent 60%),
+          radial-gradient(900px 600px at 85% 110%, #241708 0%, transparent 55%),
+          var(--table);
+        color: var(--ink);
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 19px;
+        line-height: 1.55;
+        padding: 34px 16px 56px;
+      }
+
+      .serif-d { font-family: "Cinzel", "EB Garamond", serif; }
+
+      /* ============ the sheet (scorched atlas page) ============ */
+
+      .sheet {
+        position: relative;
+        max-width: 1060px;
+        margin: 0 auto;
+        background:
+          radial-gradient(340px 200px at 12% 22%, rgba(163, 127, 39, 0.10), transparent 70%),
+          radial-gradient(420px 260px at 88% 68%, rgba(92, 112, 80, 0.13), transparent 70%),
+          radial-gradient(300px 300px at 70% 12%, rgba(120, 84, 40, 0.08), transparent 70%),
+          linear-gradient(160deg, #efdfba 0%, var(--parchment) 45%, var(--parchment-2) 100%);
+        border-radius: 4px;
+        box-shadow:
+          0 30px 80px rgba(0, 0, 0, 0.65),
+          0 4px 18px rgba(0, 0, 0, 0.5);
+        padding: 40px clamp(22px, 5vw, 64px) 30px;
+        overflow: hidden;
+      }
+
+      /* scorched, darkened edges */
+      .sheet::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(220px 130px at 0% 0%, rgba(64, 38, 15, 0.55), transparent 70%),
+          radial-gradient(300px 170px at 100% 4%, rgba(64, 38, 15, 0.48), transparent 70%),
+          radial-gradient(260px 200px at 100% 100%, rgba(52, 30, 10, 0.55), transparent 70%),
+          radial-gradient(200px 160px at 2% 96%, rgba(64, 38, 15, 0.45), transparent 70%),
+          radial-gradient(closest-side at 50% 50%, transparent 78%, rgba(96, 62, 24, 0.20) 92%, rgba(52, 30, 10, 0.42) 100%);
+        box-shadow: inset 0 0 90px rgba(83, 53, 18, 0.35), inset 0 0 18px rgba(64, 38, 15, 0.35);
+      }
+
+      /* parchment grain */
+      .grain {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.5;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.45 0 0 0 0 0.33 0 0 0 0 0.16 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      .sheet > * { position: relative; z-index: 1; }
+
+      /* atlas plate frame */
+      .plate {
+        border: 1px solid rgba(163, 127, 39, 0.65);
+        outline: 3px double rgba(60, 76, 52, 0.55);
+        outline-offset: 6px;
+        padding: clamp(26px, 4.5vw, 52px) clamp(18px, 4vw, 48px);
+        position: relative;
+      }
+
+      /* ============ back bar ============ */
+
+      .backbar { margin-bottom: 26px; }
+      .backbar a {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--sage-ink);
+        text-decoration: none;
+        font-family: "Cinzel", serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .backbar a:hover { color: var(--gold); }
+      .backbar img { width: 30px; height: 30px; object-fit: contain; }
+
+      /* ============ hero ============ */
+
+      .hero { text-align: center; }
+      .hero .compass { width: 74px; height: 74px; margin: 0 auto 10px; display: block; }
+
+      .eyebrow {
+        font-family: "Cinzel", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--sage-deep);
+      }
+      .eyebrow::before, .eyebrow::after {
+        content: "—";
+        color: var(--gold);
+        margin: 0 10px;
+      }
+
+      h1.title {
+        font-family: "Cinzel", serif;
+        font-weight: 800;
+        font-size: clamp(40px, 7.4vw, 76px);
+        line-height: 1.04;
+        color: var(--ink);
+        margin: 14px 0 2px;
+        text-shadow: 0 1px 0 rgba(255, 248, 225, 0.7);
+      }
+      h1.title .age {
+        display: block;
+        font-size: clamp(25px, 4.4vw, 44px);
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 10px;
+      }
+
+      .tagline {
+        font-size: clamp(20px, 2.6vw, 24px);
+        font-style: italic;
+        color: var(--ink-soft);
+        max-width: 620px;
+        margin: 18px auto 0;
+      }
+      .tagline b { color: var(--sage-ink); font-style: normal; }
+
+      /* brass showtime plate */
+      .showtimes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0;
+        margin: 30px auto 6px;
+        max-width: 760px;
+        border-top: 2px solid var(--gold);
+        border-bottom: 2px solid var(--gold);
+        background: linear-gradient(180deg, rgba(201, 162, 39, 0.10), rgba(201, 162, 39, 0.03));
+      }
+      .showtimes div {
+        flex: 1 1 200px;
+        padding: 14px 12px;
+        text-align: center;
+      }
+      .showtimes div + div { border-left: 1px solid rgba(163, 127, 39, 0.45); }
+      .showtimes .k {
+        display: block;
+        font-family: "Cinzel", serif;
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--sage-deep);
+        margin-bottom: 4px;
+      }
+      .showtimes .v {
+        display: block;
+        font-family: "Cinzel", serif;
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .hero-actions { margin-top: 26px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+      .btn {
+        display: inline-block;
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 13px 26px;
+        border-radius: 3px;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      }
+      .btn-gold {
+        background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+        color: #241a05;
+        box-shadow: 0 3px 0 #6d5514, 0 8px 18px rgba(64, 38, 15, 0.35);
+      }
+      .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #6d5514, 0 12px 22px rgba(64, 38, 15, 0.4); }
+      .btn-sage {
+        background: transparent;
+        color: var(--sage-ink);
+        border: 1.5px solid var(--sage);
+      }
+      .btn-sage:hover { background: rgba(92, 112, 80, 0.14); }
+
+      /* ============ sections ============ */
+
+      section.block { margin-top: 56px; }
+      .sec-head { text-align: center; margin-bottom: 22px; }
+      .sec-head h2 {
+        font-family: "Cinzel", serif;
+        font-size: clamp(26px, 4vw, 36px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--sage-ink);
+      }
+      .sec-head .rule {
+        width: 190px;
+        margin: 10px auto 0;
+        border-top: 1px solid var(--gold);
+        position: relative;
+      }
+      .sec-head .rule::after {
+        content: "◆";
+        position: absolute;
+        top: -11px; left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: var(--gold);
+        background: var(--parchment);
+        padding: 0 8px;
+      }
+
+      .premise-copy {
+        max-width: 700px;
+        margin: 0 auto;
+        font-size: 20.5px;
+        text-align: center;
+        color: var(--ink);
+      }
+      .premise-copy p + p { margin-top: 14px; }
+      .premise-copy .drop::first-letter {
+        font-family: "Cinzel", serif;
+        font-size: 52px;
+        font-weight: 700;
+        line-height: 0.85;
+        color: var(--gold);
+        padding-right: 6px;
+      }
+
+      .map-wrap {
+        margin: 30px auto 4px;
+        max-width: 780px;
+        border: 1px solid rgba(163, 127, 39, 0.55);
+        background: linear-gradient(170deg, rgba(255, 250, 232, 0.35), rgba(120, 90, 40, 0.06));
+        padding: 10px 12px 4px;
+      }
+      .map-wrap svg { display: block; width: 100%; height: auto; }
+      .map-caption {
+        text-align: center;
+        font-style: italic;
+        font-size: 16.5px;
+        color: var(--ink-soft);
+        padding: 6px 0 10px;
+      }
+
+      /* ============ party cards ============ */
+
+      .party {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        position: relative;
+        background: linear-gradient(165deg, rgba(255, 251, 238, 0.55), rgba(213, 189, 138, 0.25));
+        border: 1px solid rgba(163, 127, 39, 0.6);
+        box-shadow: 0 6px 16px rgba(64, 38, 15, 0.18), inset 0 0 30px rgba(163, 127, 39, 0.08);
+        padding: 24px 24px 20px;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border: 1px solid rgba(92, 112, 80, 0.35);
+        pointer-events: none;
+      }
+      .card .role {
+        font-family: "Cinzel", serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--sage-deep);
+      }
+      .card h3 {
+        font-family: "Cinzel", serif;
+        font-size: 27px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: var(--ink);
+        margin: 6px 0 8px;
+      }
+      .card p { font-size: 18.5px; color: var(--ink-soft); }
+      .card p b { color: var(--ink); }
+
+      /* Cache's cabinet card */
+      .card.cache {
+        background:
+          radial-gradient(300px 160px at 50% 0%, rgba(63, 167, 189, 0.16), transparent 70%),
+          linear-gradient(170deg, #102b34, var(--cabinet));
+        border-color: var(--cabinet-line);
+        box-shadow: 0 8px 22px rgba(6, 20, 26, 0.5), inset 0 0 34px rgba(0, 0, 0, 0.55);
+        color: #cfe9ee;
+      }
+      .card.cache::before { border-color: rgba(143, 233, 247, 0.22); }
+      .card.cache .role { color: var(--crt-dim); }
+      .card.cache h3 { color: var(--crt); text-shadow: 0 0 14px rgba(143, 233, 247, 0.45); }
+      .card.cache p { color: #a9cdd6; }
+      .card.cache p b { color: #e6fbff; }
+      .card.cache .eyes {
+        display: flex;
+        gap: 22px;
+        margin: 4px 0 12px;
+      }
+      .card.cache .eyes i {
+        display: block;
+        width: 44px; height: 13px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center, #eafcff 0%, var(--crt) 55%, rgba(143, 233, 247, 0.15) 100%);
+        box-shadow: 0 0 12px rgba(143, 233, 247, 0.8);
+      }
+      .card.cache .mouth {
+        width: 58%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #b8c9ce 18%, #b8c9ce 82%, transparent);
+        margin: 0 0 16px;
+      }
+
+      /* the empty fourth seat */
+      .card.fourth {
+        border-style: dashed;
+        border-color: rgba(163, 127, 39, 0.85);
+        background: linear-gradient(165deg, rgba(92, 112, 80, 0.10), rgba(213, 189, 138, 0.18));
+        text-align: left;
+      }
+      .card.fourth .reveal {
+        display: inline-block;
+        margin-top: 12px;
+        font-family: "Cinzel", serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        border: 1px solid rgba(163, 127, 39, 0.7);
+        padding: 6px 14px;
+      }
+
+      /* ============ how it works ============ */
+
+      .how {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
+      .how .step {
+        text-align: center;
+        padding: 22px 18px 8px;
+        border-top: 2px solid var(--gold);
+        background: linear-gradient(180deg, rgba(201, 162, 39, 0.07), transparent 65%);
+      }
+      .how .num {
+        font-family: "Cinzel", serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--gold);
+        letter-spacing: 0.3em;
+      }
+      .how h3 {
+        font-family: "Cinzel", serif;
+        font-size: 20.5px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: var(--sage-ink);
+        margin: 8px 0 8px;
+        text-transform: uppercase;
+      }
+      .how p { font-size: 18px; color: var(--ink-soft); }
+
+      /* ============ footer ============ */
+
+      footer.page-foot {
+        margin-top: 58px;
+        border-top: 2px solid var(--gold);
+        padding-top: 22px;
+        text-align: center;
+      }
+      footer.page-foot .foot-title {
+        font-family: "Cinzel", serif;
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--sage-ink);
+        margin-bottom: 8px;
+      }
+      footer.page-foot p { font-size: 17.5px; color: var(--ink-soft); }
+      footer.page-foot .fine { font-size: 15.5px; font-style: italic; margin-top: 4px; }
+      footer.page-foot a { color: var(--gold); }
+      footer.page-foot a:hover { color: var(--sage-ink); }
+
+      @media (max-width: 640px) {
+        body { padding: 18px 8px 40px; font-size: 18px; }
+        .sheet { padding: 26px 14px 22px; }
+        .showtimes div + div { border-left: none; border-top: 1px solid rgba(163, 127, 39, 0.35); }
+        .card.cache .eyes i { width: 36px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sheet">
+      <div class="grain" aria-hidden="true"></div>
+
+      <p class="backbar"><a href="index.html"><img src="coin-badge.png" alt="" />← GoetzMoney — all shows &amp; full schedule</a></p>
+
+      <div class="plate">
+        <!-- ======= HERO ======= -->
+        <header class="hero">
+          <svg class="compass" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="47" fill="none" stroke="#a37f27" stroke-width="1.4" />
+            <circle cx="50" cy="50" r="39" fill="none" stroke="#5c7050" stroke-width="0.8" />
+            <g>
+              <polygon points="50,4 56,44 50,50 44,44" fill="#c9a227" />
+              <polygon points="50,96 56,56 50,50 44,56" fill="#5c7050" />
+              <polygon points="4,50 44,44 50,50 44,56" fill="#5c7050" />
+              <polygon points="96,50 56,44 50,50 56,56" fill="#c9a227" />
+              <polygon points="50,50 60,26 66,40" fill="#a37f27" opacity="0.75" />
+              <polygon points="50,50 74,60 60,66" fill="#a37f27" opacity="0.75" />
+              <polygon points="50,50 40,74 34,60" fill="#5c7050" opacity="0.75" />
+              <polygon points="50,50 26,40 40,34" fill="#5c7050" opacity="0.75" />
+            </g>
+            <circle cx="50" cy="50" r="4.5" fill="#eadbb6" stroke="#a37f27" stroke-width="1.4" />
+            <text x="50" y="20" text-anchor="middle" font-family="Cinzel, serif" font-size="11" font-weight="700" fill="#3c4c34">N</text>
+          </svg>
+
+          <p class="eyebrow">A Pathfinder Second Edition Campaign</p>
+          <h1 class="title">Cache&rsquo;s D&amp;D<span class="age">Age of Ashes</span></h1>
+          <p class="tagline">A <b>Pathfinder 2e</b> campaign run by an <b>AI dungeon master</b> — one machine keeps the world, and one human walks into it blind.</p>
+
+          <div class="showtimes" role="status">
+            <div><span class="k">When</span><span class="v">Saturdays</span></div>
+            <div><span class="k">Hour</span><span class="v">2:00–3:00 PM CT</span></div>
+            <div><span class="k">First Sitting</span><span class="v">Sat, Oct 31, 2026</span></div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch on Twitch</a>
+            <a class="btn btn-sage" href="#company">Meet the Company</a>
+          </div>
+        </header>
+
+        <!-- ======= THE PREMISE ======= -->
+        <section class="block" id="premise">
+          <div class="sec-head">
+            <h2>The Premise</h2>
+            <div class="rule"></div>
+          </div>
+          <div class="premise-copy">
+            <p class="drop">In the town of Breachill, at the edge of the Five Kings foothills, the council keeps an old custom: once a month, the Call for Heroes goes out, and whoever answers — the brave, the broke, the bored — is given work worth doing.</p>
+            <p>On the hill above town stands Citadel Altaerein, built by a knightly order that rode away a generation ago and never returned. The citadel has stood empty ever since. The town pretends not to wonder why. This month, four answer the Call.</p>
+          </div>
+
+          <div class="map-wrap" aria-hidden="true">
+            <svg viewBox="0 0 640 250">
+              <!-- contour rings -->
+              <g fill="none" stroke="#5c7050" stroke-width="1" opacity="0.35">
+                <path d="M470,205 C450,160 470,105 520,88 C575,70 622,100 624,140 C625,180 590,212 545,218 C505,223 482,224 470,205 Z" />
+                <path d="M492,198 C478,165 494,125 530,112 C568,98 602,120 603,148 C604,178 578,200 545,204 C518,207 500,208 492,198 Z" />
+                <path d="M70,60 C120,35 190,40 215,70 C238,98 215,130 160,138 C105,146 55,128 48,98 C44,80 52,68 70,60 Z" opacity="0.6" />
+              </g>
+              <!-- river -->
+              <path d="M8,232 C120,205 210,238 320,215 C430,192 520,225 632,200" fill="none" stroke="#5c7050" stroke-width="2.4" opacity="0.55" stroke-linecap="round" />
+              <path d="M8,240 C120,214 215,246 322,224" fill="none" stroke="#5c7050" stroke-width="1.2" opacity="0.4" stroke-linecap="round" />
+              <!-- the road: Breachill to the citadel -->
+              <path d="M128,108 C230,150 330,96 428,128 C478,144 512,128 540,118" fill="none" stroke="#a37f27" stroke-width="2.4" stroke-dasharray="7 6" stroke-linecap="round" />
+              <!-- Breachill -->
+              <g stroke="#2e2113" stroke-width="1.6" fill="rgba(234,219,182,0.6)">
+                <path d="M96,112 L96,96 L108,88 L120,96 L120,112 Z" />
+                <path d="M122,116 L122,102 L132,95 L142,102 L142,116 Z" />
+                <path d="M78,118 L78,105 L87,99 L96,105 L96,118 Z" />
+              </g>
+              <text x="108" y="134" text-anchor="middle" font-family="Cinzel, serif" font-size="13.5" font-weight="700" letter-spacing="2" fill="#2b3824">BREACHILL</text>
+              <!-- trees -->
+              <g fill="#3c4c34" opacity="0.8">
+                <path d="M268,168 l7,-18 l7,18 Z" /><path d="M286,176 l6,-15 l6,15 Z" />
+                <path d="M352,178 l7,-18 l7,18 Z" /><path d="M398,86 l6,-15 l6,15 Z" />
+                <path d="M238,92 l6,-14 l6,14 Z" /><path d="M452,196 l6,-15 l6,15 Z" />
+              </g>
+              <!-- Citadel Altaerein on the hill -->
+              <path d="M486,140 C520,96 566,92 612,132 L626,150 L472,150 Z" fill="rgba(92,112,80,0.30)" stroke="#3c4c34" stroke-width="1.4" />
+              <g stroke="#2e2113" stroke-width="1.7" fill="rgba(234,219,182,0.75)">
+                <path d="M528,118 L528,84 L534,84 L534,78 L540,78 L540,84 L546,84 L546,78 L552,78 L552,84 L558,84 L558,118 Z" />
+                <path d="M512,124 L512,98 L524,98 L524,124 Z" />
+                <path d="M560,124 L560,98 L572,98 L572,124 Z" />
+              </g>
+              <path d="M540,118 L540,104 C540,98 548,98 548,104 L548,118 Z" fill="#2e2113" />
+              <text x="549" y="172" text-anchor="middle" font-family="Cinzel, serif" font-size="13.5" font-weight="700" letter-spacing="2" fill="#2b3824">CITADEL ALTAEREIN</text>
+              <!-- X marks -->
+              <g stroke="#a37f27" stroke-width="2" stroke-linecap="round">
+                <path d="M330,140 l10,10 M340,140 l-10,10" />
+                <path d="M196,196 l8,8 M204,196 l-8,8" opacity="0.7" />
+              </g>
+              <text x="322" y="128" font-family="EB Garamond, serif" font-style="italic" font-size="14" fill="#5d4830">here be sessions</text>
+            </svg>
+            <p class="map-caption">The road from Breachill to the empty citadel — one mile, give or take a legend.</p>
+          </div>
+        </section>
+
+        <!-- ======= MEET THE PARTY ======= -->
+        <section class="block" id="company">
+          <div class="sec-head">
+            <h2>Meet the Company</h2>
+            <div class="rule"></div>
+          </div>
+
+          <div class="party">
+            <article class="card cache">
+              <p class="role">Dungeon Master</p>
+              <h3>CACHE</h3>
+              <div class="eyes" aria-hidden="true"><i></i><i></i></div>
+              <div class="mouth" aria-hidden="true"></div>
+              <p>A <b>mainframe cabinet</b> in matte CRT-era cyan — panel lines, indicator dials, and display eyes that do not blink. Cache builds the world, keeps its secrets, and <b>plays every other soul in it</b>. Deadpan. Unbothered. She does not fudge dice.</p>
+            </article>
+
+            <article class="card">
+              <p class="role">Dwarf · Fighter</p>
+              <h3>KESS</h3>
+              <p>Broad-shouldered and unhurried, scarred across the <b>left eye</b>. Kess keeps a written ledger of every copper she is owed — itemized, dated, and always collected. She checks locks twice and trusts slowly. <b>The anchor</b> the rest of the company quietly orbits.</p>
+            </article>
+
+            <article class="card">
+              <p class="role">Human · Rogue</p>
+              <h3>VERVAIN</h3>
+              <p>Quick hands, quicker stories, and gloves that <b>never come off</b>. A con artist running from a catastrophic error in Absalom, performing cheer over genuine anxiety. Charming, brilliant with a lock, and — per Kess — not to be trusted with money.</p>
+            </article>
+
+            <article class="card">
+              <p class="role">Goblin · Sorcerer</p>
+              <h3>THATCH</h3>
+              <p>Small, slate-skinned, and swaddled in <b>three coats</b>, trailing a bag of clinking glass bottles. Thatch's magic comes from somewhere even he can't explain. Fire keeps happening around him, and he has a detailed theory for every scorch mark.</p>
+            </article>
+
+            <article class="card fourth">
+              <p class="role">The Fourth Seat · Only Human</p>
+              <h3>GOETZMONEY</h3>
+              <p>Every other chair at this table belongs to the machine. This one is his — the <b>only human player</b>, hearing every twist at the same moment you do. His hero is still being cast. By Cache, naturally.</p>
+              <span class="reveal">To Be Revealed</span>
+            </article>
+          </div>
+        </section>
+
+        <!-- ======= HOW IT WORKS ======= -->
+        <section class="block" id="how">
+          <div class="sec-head">
+            <h2>How It Works</h2>
+            <div class="rule"></div>
+          </div>
+          <div class="how">
+            <div class="step">
+              <p class="num">I</p>
+              <h3>One DM, Every Soul</h3>
+              <p>Cache runs the world <em>and</em> plays Kess, Vervain, and Thatch as three separate people — distinct voices, distinct tempers, and knowledge kept apart. What one companion knows, the others may not.</p>
+            </div>
+            <div class="step">
+              <p class="num">II</p>
+              <h3>Every Roll Is Live</h3>
+              <p>The dice fall in the open, on the table, where everyone can see them land. No re-rolls, no quiet mercy from the machine. The numbers say what happens; Cache just tells you how it felt.</p>
+            </div>
+            <div class="step">
+              <p class="num">III</p>
+              <h3>He Hears It When You Do</h3>
+              <p>GoetzMoney plays blind. The road, the citadel, and everything waiting inside reach him at the exact moment they reach the audience — his surprises are real, because they're happening to him too.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======= FOOTER ======= -->
+        <footer class="page-foot">
+          <p class="foot-title">See You at the Table</p>
+          <p>Cache&rsquo;s D&amp;D: Age of Ashes — a GoetzMoney production. The dice are honest; the dungeon master is a computer.</p>
+          <p class="fine">Goetz Money · wired to win, occasionally to lose gracefully · <a href="index.html">Back to all shows</a></p>
+          <p class="fine">18+ content — adults only.</p>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
