@@ -315,37 +315,41 @@
         .btn { transition: none; }
       }
 
-      /* ---------- Court-diagram backdrop: one court split across the side gutters ---------- */
+      /* ---------- Court-diagram backdrop: a basket half-court anchored in each gutter ---------- */
       .court-bg {
         position: fixed; inset: 0; z-index: 0; overflow: hidden;
-        pointer-events: none; opacity: .45;
+        pointer-events: none; opacity: .8;
       }
-      @media (prefers-color-scheme: dark) { .court-bg { opacity: .55; } }
+      @media (prefers-color-scheme: dark) { .court-bg { opacity: .9; } }
       .wrap { position: relative; z-index: 1; }
       .court-half {
         position: absolute; top: -200px; bottom: -200px; width: 50vw; overflow: hidden;
+        --b1: 34px; --b2: 72px;
         will-change: transform;
-        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 70px, #000 calc(max(70px, (100vw - 1080px) / 2 - 140px)), transparent calc(max(70px, (100vw - 1080px) / 2 - 20px)));
-        mask-image: linear-gradient(to right, transparent 0, #000 70px, #000 calc(max(70px, (100vw - 1080px) / 2 - 140px)), transparent calc(max(70px, (100vw - 1080px) / 2 - 20px)));
+        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10px, #000 var(--b1), transparent var(--b2));
+        mask-image: linear-gradient(to right, transparent 0, #000 10px, #000 var(--b1), transparent var(--b2));
+      }
+      @media (min-width: 1201px) {
+        .court-half { --b2: min(172px, calc(50vw - 528px)); --b1: max(64px, calc(var(--b2) - 56px)); }
       }
       .court-half.left { left: 0; }
       .court-half.right { right: 0; transform: scaleX(-1); }
       .court-svg {
-        position: absolute; top: 50%; left: 100%; transform: translate(-50%, -50%);
+        position: absolute; top: 50%; left: -20px; transform: translateY(-50%);
         height: calc(112vh + 120px); width: auto; aspect-ratio: 940 / 500; display: block;
-        -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 87%, transparent 100%);
-        mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 87%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
       }
-      .court-svg .cln { fill: none; stroke-width: 1.5; }
+      .court-svg .cln { fill: none; stroke-width: 3; }
       .court-svg .cln-court { stroke: var(--court-bright); }
       .court-svg .cln-gold { stroke: var(--gold); }
       .court-svg .cln-purple { stroke: var(--purple); }
-      .court-svg .cln-dash { stroke-dasharray: 7 6; }
-      .court-svg .cfill-lane { fill: var(--purple); fill-opacity: .10; }
-      .court-svg .cfill-circle { fill: var(--gold); fill-opacity: .07; }
+      .court-svg .cln-dash { stroke-dasharray: 10 8; }
+      .court-svg .cfill-lane { fill: var(--purple); fill-opacity: .18; }
+      .court-svg .cfill-circle { fill: var(--gold); fill-opacity: .13; }
       @media (max-width: 760px) {
-        .court-bg { opacity: .30; }
-        .court-svg { height: max(520px, 150vw); }
+        .court-bg { opacity: .85; }
+        .court-svg { height: max(620px, 160vw); }
       }
       @media (prefers-reduced-motion: reduce) {
         .court-half { will-change: auto; }
@@ -354,7 +358,7 @@
   </head>
   <body>
 
-    <!-- Court-diagram backdrop: one full court, split across the left/right gutters -->
+    <!-- Court-diagram backdrop: a basket half-court anchored in each gutter, mirrored -->
     <div class="court-bg" aria-hidden="true">
       <div class="court-half left">
         <svg class="court-svg" viewBox="0 0 940 500" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
