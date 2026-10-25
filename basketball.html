@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="favicon.ico" />
+    <title>Church Carpet Basketball League — GoetzMoney</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --bg-deep: #e9e2d2;
+        --surface: #fffdf7;
+        --surface-2: #efe8d8;
+        --ink: #1c1710;
+        --ink-soft: #57493a;
+        --line: #d8cdb4;
+        --court: #b4551d;
+        --court-bright: #e06a1c;
+        --purple: #6d1fb8;
+        --purple-bright: #b388ff;
+        --gold: #c99612;
+        --arena: #14100b;
+        --arena-2: #241b12;
+        --arena-ink: #f7efe0;
+        --arena-soft: #cdbfa8;
+        --shadow: 0 18px 40px rgba(60, 40, 10, .16);
+        --radius: 14px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #100c08;
+          --bg-deep: #0a0806;
+          --surface: #1d1710;
+          --surface-2: #271e14;
+          --ink: #f4ecdc;
+          --ink-soft: #c9b99e;
+          --line: #3d2f1f;
+          --court: #e06a1c;
+          --court-bright: #ff8438;
+          --purple: #b98cff;
+          --purple-bright: #cda9ff;
+          --gold: #e8b62a;
+          --shadow: 0 18px 40px rgba(0, 0, 0, .5);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { overflow-x: clip; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Barlow", system-ui, sans-serif;
+        font-size: 17px;
+        line-height: 1.5;
+        overflow-x: clip;
+      }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 64px; }
+      .backbar { margin: 18px 0 0; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: .06em; }
+      .backbar a { color: var(--purple); text-decoration: none; display: inline-flex; align-items: center; gap: 9px; }
+      .backbar a:hover { text-decoration: underline; }
+      .backbar img { width: 26px; height: 26px; border-radius: 50%; }
+      .hero-logo { display: block; width: 132px; height: 132px; margin-top: 24px; }
+
+      /* ---------- Arena stage ---------- */
+      .stage {
+        position: relative;
+        margin: 20px auto 0;
+        max-width: 1080px;
+        border-radius: 22px;
+        overflow: hidden;
+        background:
+          radial-gradient(ellipse 90% 55% at 50% -10%, rgba(255, 196, 110, .28), transparent 60%),
+          linear-gradient(180deg, var(--arena-2), var(--arena) 55%);
+        color: var(--arena-ink);
+        box-shadow: var(--shadow);
+      }
+      .stage::after { /* court floor lines */
+        content: "";
+        position: absolute; inset: auto 0 0 0; height: 118px;
+        background:
+          radial-gradient(ellipse 340px 90px at 50% 118%, transparent 62%, rgba(247,239,224,.16) 63%, rgba(247,239,224,.16) 65%, transparent 66%),
+          linear-gradient(180deg, transparent, rgba(224,106,28,.14));
+        border-top: 1px solid rgba(247,239,224,.10);
+        pointer-events: none;
+      }
+      .stage-inner { position: relative; z-index: 1; padding: 30px 30px 132px; }
+      .scorebug {
+        display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center;
+        font-family: "JetBrains Mono", monospace; font-size: 12.5px; letter-spacing: .06em;
+        color: var(--arena-soft);
+        border: 1px solid rgba(247,239,224,.18);
+        border-radius: 8px; padding: 8px 14px;
+        background: rgba(0,0,0,.28);
+        width: fit-content; max-width: 100%;
+      }
+      .scorebug .live-dot {
+        width: 9px; height: 9px; border-radius: 50%;
+        background: #ff4d3d; box-shadow: 0 0 0 0 rgba(255,77,61,.6);
+        animation: pulse 1.8s infinite;
+      }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255,77,61,.55); }
+        70% { box-shadow: 0 0 0 9px rgba(255,77,61,0); }
+        100% { box-shadow: 0 0 0 0 rgba(255,77,61,0); }
+      }
+      .scorebug b { color: var(--arena-ink); font-weight: 700; }
+      .stage h1 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 800; text-transform: uppercase;
+        font-size: clamp(34px, 11vw, 108px);
+        line-height: .92; letter-spacing: .01em;
+        margin: 26px 0 4px;
+      }
+      .stage h1 .row2 { color: var(--court-bright); display: block; }
+      .stage h1 .row3 {
+        display: block; color: transparent;
+        -webkit-text-stroke: 2px var(--purple-bright);
+      }
+      .stage .sub {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: clamp(19px, 3.4vw, 26px); font-weight: 600;
+        letter-spacing: .14em; text-transform: uppercase; color: var(--arena-soft);
+        margin: 10px 0 0;
+      }
+      .stage .sub em { color: var(--gold); font-style: normal; }
+      .stage-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+      .btn {
+        font-family: "Barlow Condensed", sans-serif; font-weight: 700;
+        font-size: 19px; letter-spacing: .08em; text-transform: uppercase;
+        border-radius: 10px; padding: 13px 24px; cursor: pointer;
+        border: 2px solid transparent; transition: transform .15s ease, background .15s ease;
+      }
+      .btn:active { transform: scale(.97); }
+      .btn:focus-visible { outline: 3px solid var(--purple-bright); outline-offset: 2px; }
+      .btn-play { background: var(--court-bright); color: #fff8ee; }
+      .btn-play:hover { background: var(--court); }
+      .btn-ghost { background: transparent; color: var(--arena-ink); border-color: rgba(247,239,224,.4); }
+      .btn-ghost:hover { border-color: var(--arena-ink); }
+      .btn[disabled] { opacity: .55; cursor: wait; }
+
+      /* Cache broadcast window */
+      .booth {
+        margin-top: 30px;
+        border: 1px solid rgba(247,239,224,.2);
+        border-left: 6px solid var(--purple-bright);
+        background: rgba(0,0,0,.34);
+        border-radius: 10px;
+        padding: 18px 20px;
+        min-height: 168px;
+      }
+      .booth-head {
+        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+        font-family: "JetBrains Mono", monospace; font-size: 12px;
+        letter-spacing: .14em; text-transform: uppercase; color: var(--purple-bright);
+      }
+      .cache-face {
+        width: 40px; height: 40px; flex: none; border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #3a2c1c, #171008);
+        border: 2px solid var(--purple-bright);
+        display: grid; place-items: center;
+        font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: 21px; color: var(--purple-bright);
+      }
+      .booth-head .onair { margin-left: auto; color: #ff8d80; }
+      .booth-line {
+        font-size: clamp(20px, 3.6vw, 27px); font-weight: 600; line-height: 1.35;
+        margin: 14px 0 4px; min-height: 74px;
+      }
+      .booth-line .caret { display: inline-block; width: 11px; background: var(--purple-bright); color: transparent; animation: blink 1s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      .booth-progress { display: flex; gap: 6px; margin-top: 14px; }
+      .booth-progress span {
+        height: 5px; flex: 1; border-radius: 3px; background: rgba(247,239,224,.18);
+        transition: background .3s ease;
+      }
+      .booth-progress span.done { background: var(--purple-bright); }
+      .booth-hint { font-size: 13.5px; color: var(--arena-soft); margin: 10px 0 0; }
+
+      /* Ticker */
+      .ticker {
+        position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+        background: rgba(0,0,0,.55); border-top: 1px solid rgba(247,239,224,.16);
+        overflow: hidden; white-space: nowrap; padding: 9px 0;
+        font-family: "JetBrains Mono", monospace; font-size: 12.5px; letter-spacing: .05em;
+        color: var(--arena-soft);
+      }
+      .ticker-track { display: inline-block; padding-left: 100%; animation: tick 36s linear infinite; }
+      .ticker b { color: var(--gold); }
+      @keyframes tick { to { transform: translateX(-100%); } }
+
+      /* ---------- Sections ---------- */
+      section.block { margin-top: 52px; }
+      .block-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+      .block-head h2 {
+        font-family: "Barlow Condensed", sans-serif; font-weight: 800; text-transform: uppercase;
+        font-size: clamp(32px, 5.5vw, 46px); line-height: 1; margin: 0; letter-spacing: .01em;
+      }
+      .block-head .tag {
+        font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .12em;
+        text-transform: uppercase; color: var(--purple);
+        border: 1px solid var(--purple); border-radius: 999px; padding: 4px 12px;
+      }
+      .block-head p { width: 100%; margin: 2px 0 0; color: var(--ink-soft); max-width: 640px; }
+
+      /* Tabs */
+      .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+      .tab {
+        font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 18px;
+        letter-spacing: .07em; text-transform: uppercase;
+        background: var(--surface-2); color: var(--ink-soft);
+        border: 2px solid var(--line); border-radius: 10px; padding: 10px 20px; cursor: pointer;
+      }
+      .tab[aria-selected="true"] { background: var(--arena); color: var(--arena-ink); border-color: var(--arena); }
+      @media (prefers-color-scheme: dark) {
+        .tab[aria-selected="true"] { background: var(--court-bright); color: #fff8ee; border-color: var(--court-bright); }
+      }
+      .tab:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+      .panel { display: none; }
+      .panel.active { display: block; }
+
+      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+      .card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 20px; box-shadow: var(--shadow);
+      }
+      .card .kicker {
+        font-family: "JetBrains Mono", monospace; font-size: 11.5px; letter-spacing: .14em;
+        text-transform: uppercase; color: var(--court); margin: 0 0 8px;
+      }
+      .card h3 { font-family: "Barlow Condensed", sans-serif; font-size: 25px; font-weight: 700; margin: 0 0 8px; line-height: 1.1; }
+      .card p { margin: 0; color: var(--ink-soft); font-size: 15.5px; }
+      .card .stat {
+        font-family: "Barlow Condensed", sans-serif; font-weight: 800;
+        font-size: 44px; line-height: 1; color: var(--purple); display: block; margin-bottom: 6px;
+      }
+
+      /* Matchup */
+      .matchup {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        box-shadow: var(--shadow); padding: 24px;
+        display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; text-align: center;
+      }
+      .matchup .team .tname { font-family: "Barlow Condensed", sans-serif; font-weight: 800; font-size: clamp(26px, 5vw, 38px); text-transform: uppercase; line-height: 1; }
+      .matchup .team .tsub { color: var(--ink-soft); font-size: 14.5px; margin-top: 6px; }
+      .matchup .vs {
+        font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 14px;
+        border: 2px solid var(--court); color: var(--court); border-radius: 50%;
+        width: 52px; height: 52px; display: grid; place-items: center;
+      }
+      .matchup .meta { grid-column: 1 / -1; border-top: 1px dashed var(--line); padding-top: 14px; color: var(--ink-soft); font-size: 15px; }
+      .matchup .meta b { color: var(--ink); }
+
+      /* Rundown */
+      .rundown { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+      .rundown ol { list-style: none; margin: 0; padding: 0; }
+      .rundown li {
+        display: grid; grid-template-columns: 86px 1fr; gap: 16px;
+        padding: 16px 22px; border-bottom: 1px solid var(--line); align-items: baseline;
+      }
+      .rundown li:last-child { border-bottom: none; }
+      .rundown .slot { font-family: "JetBrains Mono", monospace; font-size: 12.5px; font-weight: 700; color: var(--purple); letter-spacing: .05em; }
+      .rundown h3 { font-family: "Barlow Condensed", sans-serif; font-size: 22px; font-weight: 700; margin: 0 0 2px; }
+      .rundown p { margin: 0; color: var(--ink-soft); font-size: 15px; }
+
+      /* Countdown */
+      .countdown {
+        margin-top: 52px;
+        background: linear-gradient(120deg, var(--arena), var(--arena-2));
+        color: var(--arena-ink); border-radius: var(--radius);
+        padding: 28px; display: flex; flex-wrap: wrap; gap: 22px; align-items: center; justify-content: space-between;
+        box-shadow: var(--shadow);
+      }
+      .countdown h2 { font-family: "Barlow Condensed", sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(28px, 5vw, 40px); margin: 0; line-height: 1; }
+      .countdown p { margin: 6px 0 0; color: var(--arena-soft); }
+      .clock { display: flex; gap: 10px; }
+      .clock .unit {
+        background: rgba(0,0,0,.4); border: 1px solid rgba(247,239,224,.2); border-radius: 10px;
+        min-width: 74px; padding: 10px 8px; text-align: center;
+      }
+      .clock .num { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 30px; display: block; line-height: 1; }
+      .clock .lbl { font-family: "JetBrains Mono", monospace; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--arena-soft); }
+
+      /* Script card */
+      .script-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
+      .script-card blockquote { margin: 0 0 14px; padding: 0; font-size: 18.5px; }
+      .script-card blockquote p { margin: 0 0 12px; }
+      .script-card blockquote p:last-child { margin-bottom: 0; }
+      .script-card .who { font-family: "JetBrains Mono", monospace; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--court); display: block; margin-bottom: 6px; }
+      .copy-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+      .btn-copy {
+        font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 17px;
+        letter-spacing: .07em; text-transform: uppercase; cursor: pointer;
+        background: var(--purple); color: #fff; border: none; border-radius: 9px; padding: 11px 20px;
+      }
+      .btn-copy:focus-visible { outline: 3px solid var(--court-bright); outline-offset: 2px; }
+      .copy-note { font-size: 14px; color: var(--ink-soft); }
+
+      footer { margin-top: 56px; border-top: 1px solid var(--line); padding-top: 18px; color: var(--ink-soft); font-size: 14px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      footer .mono { font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .06em; }
+
+      @media (max-width: 620px) {
+        .stage-inner { padding: 22px 18px 128px; }
+        .matchup { grid-template-columns: 1fr; }
+        .matchup .vs { margin: 0 auto; }
+        .rundown li { grid-template-columns: 1fr; gap: 4px; }
+        .clock .unit { min-width: 62px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ticker-track { animation: none; padding-left: 0; }
+        .scorebug .live-dot { animation: none; }
+        .booth-line .caret { animation: none; }
+        .btn { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="backbar"><a href="index.html"><img src="coin-badge.png" alt="" />← GoetzMoney — all shows &amp; full schedule</a></p>
+
+      <!-- ======= STAGE / THE OPEN ======= -->
+      <header class="stage" aria-label="Carpet Basketball League broadcast open">
+        <div class="stage-inner">
+          <div class="scorebug" role="status">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span><b>ON AIR</b> · GOETZMONEY BROADCAST DESK</span>
+            <span>SEASON OPENER · WEEK 1</span>
+          </div>
+
+          <img class="hero-logo" src="ccbl-logo-anim.gif" alt="Church Carpet Basketball League animated logo" width="132" height="132" />
+          <h1>Carpet <span class="row2">Basketball</span> <span class="row3">League</span></h1>
+          <p class="sub">The living-room league is back · <em>Cache on the call</em></p>
+
+          <div class="booth" aria-live="polite">
+            <div class="booth-head">
+              <span class="cache-face" aria-hidden="true">C</span>
+              <span>Cache · Play-by-play &amp; scorebook</span>
+              <span class="onair" id="onairLabel">● Standing by</span>
+            </div>
+            <p class="booth-line" id="boothLine">Press “Run the open” and I'll bring us in like I mean it.</p>
+            <div class="booth-progress" id="boothProgress" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <p class="booth-hint">Cache's welcome, in four beats — the same open she'll deliver at tip-off every week.</p>
+          </div>
+
+          <div class="stage-actions">
+            <button class="btn btn-play" id="playOpen" type="button">▶ Run the open</button>
+            <button class="btn btn-ghost" id="skipOpen" type="button" hidden>Skip to the end</button>
+          </div>
+        </div>
+        <div class="ticker" aria-hidden="true">
+          <span class="ticker-track" id="tickerTrack"></span>
+        </div>
+      </header>
+
+      <!-- ======= RECAP / THIS WEEK ======= -->
+      <section class="block" aria-labelledby="recapHeading">
+        <div class="block-head">
+          <h2 id="recapHeading">The story so far</h2>
+          <span class="tag">Recap + this week</span>
+          <p>Every episode opens the same way: what happened last time, and why tonight matters. This is the slot Cache reads from her scorebook — Week 1 edition below.</p>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Episode briefing">
+          <button class="tab" role="tab" id="tab-recap" aria-selected="true" aria-controls="panel-recap" type="button">Last time out</button>
+          <button class="tab" role="tab" id="tab-week" aria-selected="false" aria-controls="panel-week" type="button">This week</button>
+          <button class="tab" role="tab" id="tab-rundown" aria-selected="false" aria-controls="panel-rundown" type="button">The rundown</button>
+        </div>
+
+        <!-- Recap panel -->
+        <div class="panel active" id="panel-recap" role="tabpanel" aria-labelledby="tab-recap">
+          <div class="cards">
+            <article class="card">
+              <p class="kicker">Beat 01 · The return</p>
+              <h3>Back in the Saddle</h3>
+              <p>The comeback stream put the channel back on the air — and buried in the middle of it was a quiet announcement: the carpet court was coming back with it. Chat heard it here first.</p>
+            </article>
+            <article class="card">
+              <p class="kicker">Beat 02 · The desk</p>
+              <span class="stat">1</span>
+              <h3>New voice on the call</h3>
+              <p>Cache takes the broadcast desk full-time this season: play-by-play, the official scorebook, and a memory for every grudge this league has ever produced.</p>
+            </article>
+            <article class="card">
+              <p class="kicker">Beat 03 · The stakes</p>
+              <h3>A clean slate, mostly</h3>
+              <p>No defending champion, no asterisks carried over. The only thing last season left behind is a list of scores certain people would like to settle — and Cache has the list.</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- This week panel -->
+        <div class="panel" id="panel-week" role="tabpanel" aria-labelledby="tab-week">
+          <div class="matchup">
+            <div class="team">
+              <div class="tname">GoetzMoney</div>
+              <div class="tsub">Home · the carpet itself · undefeated in his own living room (sample size: disputed)</div>
+            </div>
+            <div class="vs" aria-hidden="true">VS</div>
+            <div class="team">
+              <div class="tname">The Field</div>
+              <div class="tsub">Away · everyone who shows up · talking a bigger game than their jumper</div>
+            </div>
+            <p class="meta"><b>Season opener — Thursday, November 5, 2026.</b> First tip of the new season. The kit's ordered, the court's the same carpet it's always been, and the scorebook opens on a blank page. Cache calls it live; winners talk, losers get recapped.</p>
+          </div>
+        </div>
+
+        <!-- Rundown panel -->
+        <div class="panel" id="panel-rundown" role="tabpanel" aria-labelledby="tab-rundown">
+          <div class="rundown">
+            <ol>
+              <li>
+                <span class="slot">SEG 01</span>
+                <div>
+                  <h3>The Open</h3>
+                  <p>Title slam, Cache's welcome, and the one-line version of last week — thirty seconds, no mercy for latecomers.</p>
+                </div>
+              </li>
+              <li>
+                <span class="slot">SEG 02</span>
+                <div>
+                  <h3>The Recap Desk</h3>
+                  <p>Cache reads the scorebook: last game's final, the play everyone's still arguing about, and the stat line of the night.</p>
+                </div>
+              </li>
+              <li>
+                <span class="slot">SEG 03</span>
+                <div>
+                  <h3>Tip-Off</h3>
+                  <p>Tonight's matchup, the stakes, and the grudge of the week — then straight to the carpet. Talking is a pregame activity only.</p>
+                </div>
+              </li>
+              <li>
+                <span class="slot">SEG 04</span>
+                <div>
+                  <h3>The Game</h3>
+                  <p>Full play-by-play with Cache keeping the official book. Every call is final, especially the wrong ones.</p>
+                </div>
+              </li>
+              <li>
+                <span class="slot">SEG 05</span>
+                <div>
+                  <h3>Postgame</h3>
+                  <p>Final score entered in ink, player of the game named, and next week's grudge officially on the record.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======= CACHE'S SCRIPT ======= -->
+      <section class="block" aria-labelledby="scriptHeading">
+        <div class="block-head">
+          <h2 id="scriptHeading">Cache's welcome, word for word</h2>
+          <span class="tag">The script</span>
+          <p>The four beats the open above performs. Next week's version only changes the recap beat — Cache rewrites that line from her scorebook, the rest never moves.</p>
+        </div>
+        <div class="script-card">
+          <blockquote id="cacheScript">
+            <p><span class="who">Cache — Beat 1 · Welcome</span>“Welcome to this week's Carpet Basketball League — the only league where home-court advantage is measured in carpet burn.”</p>
+            <p><span class="who">Cache — Beat 2 · The recap slot</span>“Last time out: the comeback stream brought this channel back to life — and this league back with it. I kept the receipts, and yes, I will be reading them.”</p>
+            <p><span class="who">Cache — Beat 3 · This week</span>“This week it's the season opener: GoetzMoney against the field, a blank scorebook, and at least three grudges pretending to be storylines.”</p>
+            <p><span class="who">Cache — Beat 4 · Hand-off</span>“I'm Cache. I keep the book, I call the game, and I do not forget. Let's play.”</p>
+          </blockquote>
+          <div class="copy-row">
+            <button class="btn-copy" id="copyScript" type="button">Copy Cache's script</button>
+            <span class="copy-note" id="copyNote">For the OBS teleprompter, the show notes, or Cache herself.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======= COUNTDOWN ======= -->
+      <div class="countdown" aria-labelledby="cdHeading">
+        <div>
+          <h2 id="cdHeading">Tip-off: Thu Nov 5, 2026</h2>
+          <p>First game of the season, live from the carpet. Be in chat before Cache starts the book.</p>
+        </div>
+        <div class="clock" role="timer" aria-label="Countdown to season opener">
+          <div class="unit"><span class="num" id="cdDays">–</span><span class="lbl">Days</span></div>
+          <div class="unit"><span class="num" id="cdHours">–</span><span class="lbl">Hours</span></div>
+          <div class="unit"><span class="num" id="cdMins">–</span><span class="lbl">Mins</span></div>
+          <div class="unit"><span class="num" id="cdSecs">–</span><span class="lbl">Secs</span></div>
+        </div>
+      </div>
+
+      <footer>
+        <span>Carpet Basketball League — a GoetzMoney production. Cache keeps the official scorebook.</span>
+        <span class="mono">WEEK 1 · SEASON OPENER · NOV 5 2026</span>
+        <span>18+ content — adults only</span>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        /* ---------- Ticker ---------- */
+        var tickerItems = [
+          "CARPET BASKETBALL LEAGUE — SEASON OPENER THU NOV 5",
+          "CACHE ON THE CALL: PLAY-BY-PLAY + OFFICIAL SCOREBOOK",
+          "LAST TIME OUT: THE COMEBACK STREAM — BACK IN THE SADDLE",
+          "THIS WEEK: GOETZMONEY VS THE FIELD",
+          "GRUDGE OF THE WEEK: ALL OF THEM",
+          "THE BOOK OPENS ON A BLANK PAGE"
+        ];
+        var tickerText = tickerItems.map(function (t) { return " <b>///</b> " + t; }).join("");
+        document.getElementById("tickerTrack").innerHTML = tickerText + tickerText;
+
+        /* ---------- Cache's open: typed sequence ---------- */
+        var lines = [
+          "Welcome to this week's Carpet Basketball League — the only league where home-court advantage is measured in carpet burn.",
+          "Last time out: the comeback stream brought this channel back to life — and this league back with it. I kept the receipts, and yes, I will be reading them.",
+          "This week it's the season opener: GoetzMoney against the field, a blank scorebook, and at least three grudges pretending to be storylines.",
+          "I'm Cache. I keep the book, I call the game, and I do not forget. Let's play."
+        ];
+        var boothLine = document.getElementById("boothLine");
+        var onairLabel = document.getElementById("onairLabel");
+        var playBtn = document.getElementById("playOpen");
+        var skipBtn = document.getElementById("skipOpen");
+        var bars = document.querySelectorAll("#boothProgress span");
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var timers = [];
+        var running = false;
+
+        function clearTimers() {
+          timers.forEach(function (t) { clearTimeout(t); });
+          timers = [];
+        }
+        function setProgress(n) {
+          bars.forEach(function (bar, i) {
+            bar.classList.toggle("done", i < n);
+          });
+        }
+        function finishOpen() {
+          clearTimers();
+          running = false;
+          boothLine.textContent = lines[lines.length - 1];
+          setProgress(lines.length);
+          onairLabel.textContent = "● We're live";
+          playBtn.disabled = false;
+          playBtn.textContent = "↻ Run it again";
+          skipBtn.hidden = true;
+        }
+        function typeLine(idx) {
+          if (idx >= lines.length) { finishOpen(); return; }
+          var text = lines[idx];
+          setProgress(idx);
+          if (reduceMotion) {
+            boothLine.textContent = text;
+            timers.push(setTimeout(function () { typeLine(idx + 1); }, 1400));
+            return;
+          }
+          var i = 0;
+          boothLine.innerHTML = "<span class='caret'>|</span>";
+          (function step() {
+            i++;
+            boothLine.innerHTML = "";
+            boothLine.appendChild(document.createTextNode(text.slice(0, i)));
+            var caret = document.createElement("span");
+            caret.className = "caret";
+            caret.textContent = "|";
+            boothLine.appendChild(caret);
+            if (i < text.length) {
+              timers.push(setTimeout(step, 16));
+            } else {
+              timers.push(setTimeout(function () { typeLine(idx + 1); }, 1500));
+            }
+          })();
+        }
+        playBtn.addEventListener("click", function () {
+          if (running) return;
+          clearTimers();
+          running = true;
+          setProgress(0);
+          onairLabel.textContent = "● On air";
+          playBtn.disabled = true;
+          playBtn.textContent = "Cache is talking…";
+          skipBtn.hidden = false;
+          typeLine(0);
+        });
+        skipBtn.addEventListener("click", finishOpen);
+
+        /* ---------- Tabs ---------- */
+        var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            tabs.forEach(function (t) {
+              var selected = t === tab;
+              t.setAttribute("aria-selected", selected ? "true" : "false");
+              document.getElementById(t.getAttribute("aria-controls")).classList.toggle("active", selected);
+            });
+          });
+        });
+
+        /* ---------- Copy script ---------- */
+        var copyBtn = document.getElementById("copyScript");
+        var copyNote = document.getElementById("copyNote");
+        copyBtn.addEventListener("click", function () {
+          var text = document.getElementById("cacheScript").innerText.replace(/\s+\n/g, "\n").trim();
+          function done(msg) { copyNote.textContent = msg; }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(
+              function () { done("Copied — Cache's four beats are on your clipboard."); },
+              function () { done("Copy was blocked here — the script above is the same text, ready to select."); }
+            );
+          } else {
+            done("Clipboard isn't available here — the script above is ready to select and copy by hand.");
+          }
+        });
+
+        /* ---------- Countdown to tip-off: Thu Nov 5, 2026, 6:30 PM CT ---------- */
+        var tipOff = new Date("2026-11-05T18:30:00-06:00").getTime();
+        var cd = {
+          d: document.getElementById("cdDays"),
+          h: document.getElementById("cdHours"),
+          m: document.getElementById("cdMins"),
+          s: document.getElementById("cdSecs")
+        };
+        function pad(n) { return (n < 10 ? "0" : "") + n; }
+        function tickClock() {
+          var diff = tipOff - Date.now();
+          if (diff <= 0) {
+            cd.d.textContent = "00"; cd.h.textContent = "00"; cd.m.textContent = "00"; cd.s.textContent = "00";
+            return;
+          }
+          var s = Math.floor(diff / 1000);
+          cd.d.textContent = pad(Math.floor(s / 86400));
+          cd.h.textContent = pad(Math.floor((s % 86400) / 3600));
+          cd.m.textContent = pad(Math.floor((s % 3600) / 60));
+          cd.s.textContent = pad(s % 60);
+        }
+        tickClock();
+        setInterval(tickClock, 1000);
+      })();
+    </script>
+  </body>
+</html>
