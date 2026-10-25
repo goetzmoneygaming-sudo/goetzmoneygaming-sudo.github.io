@@ -58,22 +58,12 @@
         position: relative;
         max-width: 1060px;
         margin: 0 auto;
-        /* The parchment is one photograph (parchment.webp), served as
-           three slices of that same image so the sheet can stand at any
-           height: the top slice carries the charred top edge and the
-           first burn holes, a calm middle band with no holes tiles
-           between, and the bottom slice carries the remaining holes
-           and the charred bottom edge. Each slice's own dark surround
-           keeps the sheet's irregular silhouette reading against the
-           page background, sampled from that same surround. */
+        /* The parchment is photography, laid in by .parchment-stack
+           (below): two different burned sheets sliced into a top cap,
+           a run of distinct middle bands and a bottom cap, so the
+           charred edges never repeat down the page. The stack's dark
+           surround blends into this base colour, sampled from it. */
         background-color: #0b0a08;
-        background-image:
-          url("parchment-top.webp"),
-          url("parchment-bot.webp"),
-          url("parchment-mid.webp");
-        background-position: top center, bottom center, center top;
-        background-size: 100% auto, 100% auto, 100% auto;
-        background-repeat: no-repeat, no-repeat, repeat-y;
         border-radius: 4px;
         box-shadow:
           0 30px 80px rgba(0, 0, 0, 0.65),
@@ -86,6 +76,58 @@
       }
 
       .sheet > * { position: relative; z-index: 1; }
+
+      /* ============ the parchment stack ============ */
+      /* A flex column the height of the sheet: the master photo's top
+         cap, then six distinct middle bands sliced from two different
+         burned parchments (three from the variant sheet, its two
+         mirrors, one mirrored stretch of the master), then the calm
+         master band as a growing filler, and the master bottom cap
+         pinned to the foot. Every height is in cqw (1% of the sheet's
+         width): a band sliced from a photograph keeps its true
+         proportions at any sheet size, and the sequence — about
+         182cqw of one-off bands under the hero cap — never shows the
+         same edge profile twice. Band tops are cross-faded into their
+         predecessor in the pixels, so the joins hide in the grain.
+         Only if a sheet grows past caps + bands + a full extra tile
+         does the plain filler band repeat, far down the page. */
+      .sheet .parchment-stack {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: flex;
+        flex-direction: column;
+        container-type: inline-size;
+        pointer-events: none;
+      }
+      .parchment-stack > div {
+        flex: 0 0 auto;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 50% 0;
+      }
+      .parchment-stack .ps-top { height: 44.9cqw; background-image: url("parchment-top.webp"); }
+      .parchment-stack .ps-v2 { height: 28.3cqw; background-image: url("band-v2.webp"); }
+      .parchment-stack .ps-v1 { height: 24.6cqw; background-image: url("band-v1.webp"); }
+      .parchment-stack .ps-v4 { height: 24.6cqw; background-image: url("band-v4.webp"); }
+      .parchment-stack .ps-v3 { height: 20.8cqw; background-image: url("band-v3.webp"); }
+      .parchment-stack .ps-v5 { height: 20.8cqw; background-image: url("band-v5.webp"); }
+      .parchment-stack .ps-m2 { height: 17.9cqw; background-image: url("band-m2.webp"); }
+      .parchment-stack .ps-fill {
+        flex: 1 0 10.3cqw;
+        background-image: url("parchment-mid.webp");
+        background-repeat: repeat-y;
+        background-size: 100% auto;
+      }
+      .parchment-stack .ps-bot {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 73.3cqw;
+        background-image: url("parchment-bot.webp");
+        background-position: 50% 100%;
+      }
 
       /* atlas plate frame */
       .plate {
@@ -529,13 +571,35 @@
         71% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.07); }
         100% { opacity: 0.38; transform: translate(-50%, -50%) scale(0.95); }
       }
+      /* dimmer embers for the side bites and scorch points of the
+         middle bands — banked coals beside the true holes' glow */
+      .ember-layer .ember.dim { animation-name: emberPulseDim; }
+      @keyframes emberPulseDim {
+        0% { opacity: 0.2; transform: translate(-50%, -50%) scale(0.95); }
+        30% { opacity: 0.42; transform: translate(-50%, -50%) scale(1.01); }
+        55% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.98); }
+        78% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.05); }
+        100% { opacity: 0.24; transform: translate(-50%, -50%) scale(0.96); }
+      }
       @media (prefers-reduced-motion: reduce) {
         .ember-layer .ember { animation: none; opacity: 0.45; }
+        .ember-layer .ember.dim { opacity: 0.3; }
       }
     </style>
   </head>
   <body>
     <div class="sheet">
+      <div class="parchment-stack" aria-hidden="true">
+        <div class="ps-top"></div>
+        <div class="ps-v2"></div>
+        <div class="ps-v1"></div>
+        <div class="ps-v4"></div>
+        <div class="ps-v3"></div>
+        <div class="ps-v5"></div>
+        <div class="ps-m2"></div>
+        <div class="ps-fill"></div>
+        <div class="ps-bot"></div>
+      </div>
       <div class="ember-layer" aria-hidden="true">
         <i class="ember from-top" style="--x:8.4%; --p:34.8cqw; --s:16cqw; --d:6.4s; --dl:-1.2s"></i>
         <i class="ember from-top" style="--x:90.9%; --p:24cqw; --s:12cqw; --d:8.7s; --dl:-4.3s"></i>
@@ -544,6 +608,21 @@
         <i class="ember from-bot" style="--x:8%; --p:57.9cqw; --s:18cqw; --d:7.3s; --dl:-2.8s"></i>
         <i class="ember from-bot" style="--x:92.6%; --p:39.4cqw; --s:15cqw; --d:6.9s; --dl:-5.2s"></i>
         <i class="ember from-bot" style="--x:8.1%; --p:34.2cqw; --s:16cqw; --d:8.1s; --dl:-3.7s"></i>
+        <!-- middle bands: burn holes and bite rims, pinned in cqw from
+             the top of the sheet — the fire runs the full length of
+             both edges now, at uneven intervals, never in sync -->
+        <i class="ember from-top" style="--x:79.1%; --p:65.4cqw; --s:9cqw; --d:7.7s; --dl:-2.1s"></i>
+        <i class="ember from-top" style="--x:6.8%; --p:71.3cqw; --s:7cqw; --d:6.1s; --dl:-4.8s"></i>
+        <i class="ember from-top" style="--x:79.9%; --p:87.3cqw; --s:9cqw; --d:5.9s; --dl:-1.7s"></i>
+        <i class="ember from-top" style="--x:83.9%; --p:89.7cqw; --s:15cqw; --d:8.9s; --dl:-5.5s"></i>
+        <i class="ember from-top dim" style="--x:16%; --p:87.5cqw; --s:11cqw; --d:9.4s; --dl:-3.3s"></i>
+        <i class="ember from-top" style="--x:20.1%; --p:111.9cqw; --s:9cqw; --d:8.3s; --dl:-6.4s"></i>
+        <i class="ember from-top dim" style="--x:84%; --p:112.1cqw; --s:11cqw; --d:6.6s; --dl:-0.9s"></i>
+        <i class="ember from-top" style="--x:16.1%; --p:114.3cqw; --s:15cqw; --d:7.1s; --dl:-4.1s"></i>
+        <i class="ember from-top dim" style="--x:14.5%; --p:135cqw; --s:12cqw; --d:9.8s; --dl:-7.2s"></i>
+        <i class="ember from-top dim" style="--x:86.5%; --p:136.2cqw; --s:11cqw; --d:7.9s; --dl:-2.6s"></i>
+        <i class="ember from-top dim" style="--x:85.5%; --p:155.8cqw; --s:12cqw; --d:6.8s; --dl:-5.8s"></i>
+        <i class="ember from-top dim" style="--x:13.5%; --p:157cqw; --s:11cqw; --d:9.1s; --dl:-1.4s"></i>
       </div>
       <p class="backbar"><a href="index.html"><img src="coin-badge.png" alt="" />← GoetzMoney — all shows &amp; full schedule</a></p>
 
