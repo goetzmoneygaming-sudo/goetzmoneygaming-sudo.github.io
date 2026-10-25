@@ -29,6 +29,8 @@
         --arena-soft: #cdbfa8;
         --shadow: 0 18px 40px rgba(60, 40, 10, .16);
         --radius: 14px;
+        --court-len: calc(112vh + 120px);
+        --unit: calc(var(--court-len) / 940);
       }
       @media (prefers-color-scheme: dark) {
         :root {
@@ -50,6 +52,7 @@
       * { box-sizing: border-box; }
       html { overflow-x: clip; }
       body {
+        position: relative;
         margin: 0;
         background: var(--bg);
         color: var(--ink);
@@ -58,7 +61,7 @@
         line-height: 1.5;
         overflow-x: clip;
       }
-      .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 64px; }
+      .wrap { max-width: 1080px; margin: 0 auto; padding: calc(var(--unit) * 122) 20px calc(var(--unit) * 132); }
       .backbar { margin: 18px 0 0; font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: .06em; }
       .backbar a { color: var(--purple); text-decoration: none; display: inline-flex; align-items: center; gap: 9px; }
       .backbar a:hover { text-decoration: underline; }
@@ -315,17 +318,36 @@
         .btn { transition: none; }
       }
 
-      /* ---------- Court-diagram backdrop: one court rotated 90°, running lengthwise down both gutters ---------- */
+      /* ---------- Court-diagram backdrop: one court rotated 90 degrees, running the full length of the page ----------
+         Static by construction - no script touches this backdrop. Both end zones and the half-court
+         band are single full-width parents; the sidelines are two full-height stripes painted by one
+         element; every measurement derives from the shared --unit scale. The sides cannot drift apart. */
       .court-bg {
-        position: fixed; inset: 0; z-index: 0; overflow: hidden;
+        position: absolute; inset: 0; z-index: 0; overflow: hidden;
         pointer-events: none; opacity: .8;
+        --zone-h: calc(var(--unit) * 440);
+        --center-h: calc(var(--unit) * 180);
+        --rail-w: calc(var(--unit) * 3);
+        --rail-x: calc(10px + var(--unit) * 18.5);
       }
       @media (prefers-color-scheme: dark) { .court-bg { opacity: .9; } }
       .wrap { position: relative; z-index: 1; }
+      .court-rails {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(var(--gold), var(--gold)),
+          linear-gradient(var(--gold), var(--gold));
+        background-size: var(--rail-w) 100%, var(--rail-w) 100%;
+        background-position: var(--rail-x) 0, calc(100% - var(--rail-x)) 0;
+        background-repeat: no-repeat;
+      }
+      .court-zone { position: absolute; left: 0; right: 0; }
+      .court-zone.top { top: 0; height: var(--zone-h); }
+      .court-zone.bottom { bottom: 0; height: var(--zone-h); }
+      .court-zone.center { top: 50%; transform: translateY(-50%); height: var(--center-h); }
       .court-half {
-        position: absolute; top: -200px; bottom: -200px; width: 50vw; overflow: hidden;
+        position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden;
         --b1: 34px; --b2: 72px;
-        will-change: transform;
         -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10px, #000 var(--b1), transparent var(--b2));
         mask-image: linear-gradient(to right, transparent 0, #000 10px, #000 var(--b1), transparent var(--b2));
       }
@@ -334,12 +356,9 @@
       }
       .court-half.left { left: 0; }
       .court-half.right { right: 0; transform: scaleX(-1); }
-      .court-svg {
-        position: absolute; top: 50%; left: 10px; transform: translateY(-50%);
-        height: calc(112vh + 120px); width: auto; aspect-ratio: 500 / 940; display: block;
-        -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
-        mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
-      }
+      .court-svg { position: absolute; top: 0; left: 10px; height: 100%; width: auto; display: block; }
+      .court-svg.end { aspect-ratio: 500 / 440; }
+      .court-svg.ctr { aspect-ratio: 500 / 180; }
       .court-svg .cln { fill: none; stroke-width: 3; }
       .court-svg .cln-court { stroke: var(--court-bright); }
       .court-svg .cln-gold { stroke: var(--gold); }
@@ -347,67 +366,178 @@
       .court-svg .cln-dash { stroke-dasharray: 10 8; }
       .court-svg .cfill-lane { fill: var(--purple); fill-opacity: .18; }
       .court-svg .cfill-circle { fill: var(--gold); fill-opacity: .13; }
+      .court-hoop {
+        position: absolute; left: 50%; width: calc(var(--unit) * 118); aspect-ratio: 118 / 100;
+        transform: translateX(-50%);
+      }
+      .court-hoop.top { top: calc(var(--unit) * 10); }
+      .court-hoop.bottom { bottom: calc(var(--unit) * 10); transform: translateX(-50%) scaleY(-1); }
+      .court-hoop svg { display: block; width: 100%; height: 100%; }
+      .court-hoop .hb-board { fill: var(--purple); fill-opacity: .18; stroke: var(--gold); stroke-width: 3; }
+      .court-hoop .hb-inner { fill: none; stroke: var(--gold); stroke-width: 2.5; }
+      .court-hoop .hb-mount { fill: var(--court-bright); }
+      .court-hoop .hb-rim { fill: none; stroke: var(--court-bright); stroke-width: 3.5; }
+      .court-hoop .hb-net { fill: none; stroke: var(--gold); stroke-width: 1.6; opacity: .6; }
       @media (max-width: 760px) {
         .court-bg { opacity: .85; }
-        .court-svg { height: max(820px, 120vh); }
+        :root { --court-len: max(820px, 120vh); }
       }
-      @media (prefers-reduced-motion: reduce) {
-        .court-half { will-change: auto; }
-      }
+      /* Reduced motion: the backdrop is fully static - nothing animates or drifts at any setting. */
     </style>
   </head>
   <body>
 
-    <!-- Court-diagram backdrop: one court rotated 90° — sidelines run down both gutters,
-         one basket toward the top of the page, the other toward the bottom, mirrored per gutter -->
+    <!-- Court-diagram backdrop: one court rotated 90 degrees and stretched down the full page.
+         Sideline rails run unbroken from the top of the page to the bottom; an end zone with a
+         visible hoop sits at each end; the half-court band crosses at the page's exact middle.
+         Fully static - no script moves any of it, so the two sides can never disagree. -->
     <div class="court-bg" aria-hidden="true">
-      <div class="court-half left">
-        <svg class="court-svg" viewBox="0 0 500 940" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
-          <defs>
-            <g id="court-half-a">
-              <rect class="cfill-lane" x="20" y="170" width="190" height="160" />
-              <rect class="cln cln-court" x="20" y="170" width="190" height="160" />
-              <path class="cln cln-court" d="M210 190 A60 60 0 0 0 210 310" />
-              <path class="cln cln-court cln-dash" d="M210 190 A60 60 0 0 1 210 310" />
-              <path class="cln cln-court" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
-              <path class="cln cln-gold" d="M65 205 A45 45 0 0 1 65 295" />
-              <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
-              <circle class="cln cln-gold" cx="65" cy="250" r="12" />
+      <div class="court-rails"></div>
+      <div class="court-zone top">
+        <div class="court-half left">
+          <svg class="court-svg end" viewBox="0 0 500 440" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            <defs>
+              <g id="court-end-a">
+                <rect class="cfill-lane" style="fill:var(--purple);fill-opacity:.18" x="20" y="170" width="190" height="160" />
+                <rect class="cln cln-court" fill="none" x="20" y="170" width="190" height="160" />
+                <path class="cln cln-court" fill="none" d="M210 190 A60 60 0 0 0 210 310" />
+                <path class="cln cln-court cln-dash" fill="none" d="M210 190 A60 60 0 0 1 210 310" />
+                <path class="cln cln-court" fill="none" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
+                <path class="cln cln-gold" fill="none" d="M65 205 A45 45 0 0 1 65 295" />
+                <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
+                <circle class="cln cln-gold" fill="none" cx="65" cy="250" r="12" />
+              </g>
+            </defs>
+            <g transform="translate(500 0) rotate(90)">
+            <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
+            <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
+            <circle class="cfill-circle" cx="470" cy="250" r="90" />
+            <circle class="cln cln-purple" cx="470" cy="250" r="90" />
+            <use href="#court-end-a" />
+            <use href="#court-end-a" transform="translate(940 0) scale(-1 1)" />
             </g>
-          </defs>
-          <g transform="translate(500 0) rotate(90)">
-          <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
-          <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
-          <circle class="cfill-circle" cx="470" cy="250" r="90" />
-          <circle class="cln cln-purple" cx="470" cy="250" r="90" />
-          <use href="#court-half-a" />
-          <use href="#court-half-a" transform="translate(940 0) scale(-1 1)" />
-          </g>
-        </svg>
+          </svg>
+        </div>
+        <div class="court-half right">
+          <svg class="court-svg end" viewBox="0 0 500 440" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            <defs>
+              <g id="court-end-b">
+                <rect class="cfill-lane" style="fill:var(--purple);fill-opacity:.18" x="20" y="170" width="190" height="160" />
+                <rect class="cln cln-court" fill="none" x="20" y="170" width="190" height="160" />
+                <path class="cln cln-court" fill="none" d="M210 190 A60 60 0 0 0 210 310" />
+                <path class="cln cln-court cln-dash" fill="none" d="M210 190 A60 60 0 0 1 210 310" />
+                <path class="cln cln-court" fill="none" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
+                <path class="cln cln-gold" fill="none" d="M65 205 A45 45 0 0 1 65 295" />
+                <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
+                <circle class="cln cln-gold" fill="none" cx="65" cy="250" r="12" />
+              </g>
+            </defs>
+            <g transform="translate(500 0) rotate(90)">
+            <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
+            <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
+            <circle class="cfill-circle" cx="470" cy="250" r="90" />
+            <circle class="cln cln-purple" cx="470" cy="250" r="90" />
+            <use href="#court-end-b" />
+            <use href="#court-end-b" transform="translate(940 0) scale(-1 1)" />
+            </g>
+          </svg>
+        </div>
+        <div class="court-hoop top">
+          <svg viewBox="0 0 118 100" focusable="false" aria-hidden="true">
+            <rect class="hb-board" x="14" y="6" width="90" height="52" />
+            <rect class="hb-inner" x="41" y="28" width="36" height="22" />
+            <rect class="hb-mount" x="55" y="58" width="8" height="7" />
+            <ellipse class="hb-rim" cx="59" cy="68" rx="16.5" ry="4.2" />
+            <g class="hb-net">
+              <path d="M46 71 Q50 82 54 93" />
+              <path d="M59 72 Q59 82 59 94" />
+              <path d="M72 71 Q68 82 64 93" />
+              <path d="M47.5 79 Q59 84 70.5 79" />
+              <path d="M50 87 Q59 91 68 87" />
+            </g>
+          </svg>
+        </div>
       </div>
-      <div class="court-half right">
-        <svg class="court-svg" viewBox="0 0 500 940" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
-          <defs>
-            <g id="court-half-b">
-              <rect class="cfill-lane" x="20" y="170" width="190" height="160" />
-              <rect class="cln cln-court" x="20" y="170" width="190" height="160" />
-              <path class="cln cln-court" d="M210 190 A60 60 0 0 0 210 310" />
-              <path class="cln cln-court cln-dash" d="M210 190 A60 60 0 0 1 210 310" />
-              <path class="cln cln-court" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
-              <path class="cln cln-gold" d="M65 205 A45 45 0 0 1 65 295" />
-              <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
-              <circle class="cln cln-gold" cx="65" cy="250" r="12" />
+      <div class="court-zone center">
+        <div class="court-half left">
+          <svg class="court-svg ctr" viewBox="0 380 500 180" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            <circle class="cfill-circle" cx="250" cy="470" r="90" />
+            <circle class="cln cln-purple" cx="250" cy="470" r="90" />
+            <line class="cln cln-gold" x1="20" y1="470" x2="480" y2="470" />
+          </svg>
+        </div>
+        <div class="court-half right">
+          <svg class="court-svg ctr" viewBox="0 380 500 180" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            <circle class="cfill-circle" cx="250" cy="470" r="90" />
+            <circle class="cln cln-purple" cx="250" cy="470" r="90" />
+            <line class="cln cln-gold" x1="20" y1="470" x2="480" y2="470" />
+          </svg>
+        </div>
+      </div>
+      <div class="court-zone bottom">
+        <div class="court-half left">
+          <svg class="court-svg end" viewBox="0 500 500 440" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            <defs>
+              <g id="court-end-c">
+                <rect class="cfill-lane" style="fill:var(--purple);fill-opacity:.18" x="20" y="170" width="190" height="160" />
+                <rect class="cln cln-court" fill="none" x="20" y="170" width="190" height="160" />
+                <path class="cln cln-court" fill="none" d="M210 190 A60 60 0 0 0 210 310" />
+                <path class="cln cln-court cln-dash" fill="none" d="M210 190 A60 60 0 0 1 210 310" />
+                <path class="cln cln-court" fill="none" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
+                <path class="cln cln-gold" fill="none" d="M65 205 A45 45 0 0 1 65 295" />
+                <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
+                <circle class="cln cln-gold" fill="none" cx="65" cy="250" r="12" />
+              </g>
+            </defs>
+            <g transform="translate(500 0) rotate(90)">
+            <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
+            <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
+            <circle class="cfill-circle" cx="470" cy="250" r="90" />
+            <circle class="cln cln-purple" cx="470" cy="250" r="90" />
+            <use href="#court-end-c" />
+            <use href="#court-end-c" transform="translate(940 0) scale(-1 1)" />
             </g>
-          </defs>
-          <g transform="translate(500 0) rotate(90)">
-          <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
-          <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
-          <circle class="cfill-circle" cx="470" cy="250" r="90" />
-          <circle class="cln cln-purple" cx="470" cy="250" r="90" />
-          <use href="#court-half-b" />
-          <use href="#court-half-b" transform="translate(940 0) scale(-1 1)" />
-          </g>
-        </svg>
+          </svg>
+        </div>
+        <div class="court-half right">
+          <svg class="court-svg end" viewBox="0 500 500 440" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+            <defs>
+              <g id="court-end-d">
+                <rect class="cfill-lane" style="fill:var(--purple);fill-opacity:.18" x="20" y="170" width="190" height="160" />
+                <rect class="cln cln-court" fill="none" x="20" y="170" width="190" height="160" />
+                <path class="cln cln-court" fill="none" d="M210 190 A60 60 0 0 0 210 310" />
+                <path class="cln cln-court cln-dash" fill="none" d="M210 190 A60 60 0 0 1 210 310" />
+                <path class="cln cln-court" fill="none" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
+                <path class="cln cln-gold" fill="none" d="M65 205 A45 45 0 0 1 65 295" />
+                <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
+                <circle class="cln cln-gold" fill="none" cx="65" cy="250" r="12" />
+              </g>
+            </defs>
+            <g transform="translate(500 0) rotate(90)">
+            <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
+            <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
+            <circle class="cfill-circle" cx="470" cy="250" r="90" />
+            <circle class="cln cln-purple" cx="470" cy="250" r="90" />
+            <use href="#court-end-d" />
+            <use href="#court-end-d" transform="translate(940 0) scale(-1 1)" />
+            </g>
+          </svg>
+        </div>
+        <div class="court-hoop bottom">
+          <svg viewBox="0 0 118 100" focusable="false" aria-hidden="true">
+            <rect class="hb-board" x="14" y="6" width="90" height="52" />
+            <rect class="hb-inner" x="41" y="28" width="36" height="22" />
+            <rect class="hb-mount" x="55" y="58" width="8" height="7" />
+            <ellipse class="hb-rim" cx="59" cy="68" rx="16.5" ry="4.2" />
+            <g class="hb-net">
+              <path d="M46 71 Q50 82 54 93" />
+              <path d="M59 72 Q59 82 59 94" />
+              <path d="M72 71 Q68 82 64 93" />
+              <path d="M47.5 79 Q59 84 70.5 79" />
+              <path d="M50 87 Q59 91 68 87" />
+            </g>
+          </svg>
+        </div>
       </div>
     </div>
     <div class="wrap">
@@ -731,37 +861,5 @@
       })();
     </script>
 
-    <script>
-      // Court-diagram parallax: the lengthwise gutter court drifts slowly against the scroll
-      // (~0.2x scroll rate up top, easing out to a capped total drift; transform-only).
-      (function () {
-        "use strict";
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        var left = document.querySelector(".court-half.left");
-        var right = document.querySelector(".court-half.right");
-        if (!left || !right) return;
-        function drift(y, rate, max) { return -max * (1 - Math.exp(-y * rate / max)); }
-        var tL = 0, tR = 0, cL = 0, cR = 0, running = false;
-        function frame() {
-          cL += (tL - cL) * 0.075;
-          cR += (tR - cR) * 0.075;
-          if (Math.abs(tL - cL) < 0.05) cL = tL;
-          if (Math.abs(tR - cR) < 0.05) cR = tR;
-          left.style.transform = "translate3d(0," + cL.toFixed(2) + "px,0)";
-          right.style.transform = "translate3d(0," + cR.toFixed(2) + "px,0) scaleX(-1)";
-          if (cL !== tL || cR !== tR) { requestAnimationFrame(frame); }
-          else { running = false; }
-        }
-        function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
-        function onScroll() {
-          var y = window.scrollY || window.pageYOffset;
-          tL = drift(y, 0.22, 190);
-          tR = drift(y, 0.19, 150);
-          kick();
-        }
-        window.addEventListener("scroll", onScroll, { passive: true });
-        onScroll();
-      })();
-    </script>
   </body>
 </html>
