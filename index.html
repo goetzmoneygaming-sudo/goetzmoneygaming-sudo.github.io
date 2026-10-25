@@ -469,6 +469,8 @@
   .sched-day.maybe .t { color: var(--gold); text-shadow: 0 0 12px rgba(255,201,60,0.6); }
   .sched-note { margin-top: 18px; font-size: 13px; color: rgba(247,243,234,0.55); }
   .sched-day .s { margin-top: 4px; font-family: "JetBrains Mono", monospace; font-size: 9.5px; letter-spacing: 0.04em; line-height: 1.35; color: rgba(247,243,234,0.55); }
+  .sched-day .s a.sched-link { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+  .sched-day .s a.sched-link:hover { color: #fff; }
   .sched-day.event { border-color: rgba(123,63,212,0.85); background: rgba(123,63,212,0.10); }
 
   .countdown { margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,201,60,0.15); }
@@ -1053,6 +1055,7 @@
       <a href="#latest">Latest</a>
       <a href="#about">About</a>
       <a href="#schedule">Schedule</a>
+      <a href="basketball.html">Basketball</a>
       <a href="#merch">Merch</a>
       <a href="#stats">Stats</a>
       <a href="#heroes">Heroes</a>
@@ -1144,15 +1147,12 @@
     <div class="panel-glow"></div>
     <div class="panel">
       <span class="eyebrow">Catch The Stream</span>
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;">
-        <h2 class="section-title display" style="margin-bottom:0;">Schedule</h2>
-        <img src="ccbl-logo-anim.gif" alt="Church Carpet Basketball League" style="height:96px;width:96px;flex:none;">
-      </div>
+      <h2 class="section-title display" style="margin-bottom:0;">Schedule</h2>
       <div class="sched-grid" id="sched-grid">
         <div class="sched-day"><div class="d">Mon</div><div class="t">—</div></div>
         <div class="sched-day"><div class="d">Tue</div><div class="t">—</div></div>
         <div class="sched-day"><div class="d">Wed</div><div class="t">—</div></div>
-        <div class="sched-day event"><div class="d">Thu</div><div class="t">Hoops</div><div class="s">Church Carpet Basketball League</div></div>
+        <div class="sched-day event"><div class="d">Thu</div><div class="t">Hoops</div><div class="s">Church Carpet Basketball League</div><div class="s"><a class="sched-link" href="basketball.html">League page →</a></div></div>
         <div class="sched-day maybe"><div class="d">Fri</div><div class="t">?</div></div>
         <div class="sched-day event"><div class="d">Sat</div><div class="t">2PM</div><div class="s">D&amp;D — Age of Ashes with Cache</div></div>
         <div class="sched-day live"><div class="d">Sun</div><div class="t">8PM</div></div>
@@ -1756,7 +1756,8 @@
       grid.innerHTML = data.days.map(d => {
         const cls = d.status && d.status !== "off" ? `sched-day ${d.status}` : "sched-day";
         const sub = d.label ? `<div class="s">${d.label}</div>` : "";
-        return `<div class="${cls}"><div class="d">${d.day || ""}</div><div class="t">${d.time || "—"}</div>${sub}</div>`;
+        const link = d.label && d.label.indexOf("Basketball") !== -1 ? `<div class="s"><a class="sched-link" href="basketball.html">League page →</a></div>` : "";
+        return `<div class="${cls}"><div class="d">${d.day || ""}</div><div class="t">${d.time || "—"}</div>${sub}${link}</div>`;
       }).join("");
     }
     const note = document.getElementById("sched-note");
