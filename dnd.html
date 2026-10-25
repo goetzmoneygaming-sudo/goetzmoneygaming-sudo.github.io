@@ -62,22 +62,12 @@
         box-shadow:
           0 30px 80px rgba(0, 0, 0, 0.65),
           0 4px 18px rgba(0, 0, 0, 0.5);
-        padding: 40px clamp(22px, 5vw, 64px) 30px;
+        padding: 40px clamp(22px, 5vw, 64px) 150px;
         overflow: hidden;
       }
 
-      /* scorched, darkened edges */
-      .sheet::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-          radial-gradient(220px 130px at 0% 0%, rgba(64, 38, 15, 0.55), transparent 70%),
-          radial-gradient(300px 170px at 100% 4%, rgba(64, 38, 15, 0.48), transparent 70%),
-          radial-gradient(260px 200px at 100% 100%, rgba(52, 30, 10, 0.55), transparent 70%),
-          radial-gradient(200px 160px at 2% 96%, rgba(64, 38, 15, 0.45), transparent 70%);
-      }
+      /* burned edges live in .burnframe (see the burn + fire block below) —
+         real char with an eaten silhouette, not a soft vignette */
 
       /* parchment grain */
       .grain {
@@ -444,7 +434,6 @@
 
       /* ============ ink outline — non-black lettering pops ============ */
       /* display lettering: full eight-direction outline */
-      h1.title .age,
       .sec-head h2,
       .card h3,
       .how h3,
@@ -457,9 +446,6 @@
           -1px 0 0 rgba(20, 13, 5, 0.85), 1px 0 0 rgba(20, 13, 5, 0.85);
       }
       /* small caps, labels, stamps, links: lighter four-direction outline */
-      .eyebrow,
-      .backbar a,
-      .showtimes .k,
       .card .role,
       .how .num,
       .card.fourth .reveal,
@@ -474,15 +460,166 @@
 
       @media (max-width: 640px) {
         body { padding: 18px 8px 40px; font-size: 18px; }
-        .sheet { padding: 26px 14px 22px; }
+        .sheet { padding: 26px 14px 106px; }
         .showtimes div + div { border-left: none; border-top: 1px solid rgba(163, 127, 39, 0.35); }
         .card.cache .eyes i { width: 36px; }
+      }
+
+      /* ============ top text, cleaned up ============ */
+      /* The outline pass smeared the small, widely-tracked Cinzel caps at the
+         top of the page (back bar, eyebrow, showtime labels): four offset
+         shadow copies at ±1px read as a muddy halo on 11–14px letters, so
+         those sit clean now — their ink-on-parchment contrast never needed
+         help. The hero subtitle keeps its black outline, but as one crisp
+         text stroke instead of the eight-direction fringe that was eating
+         the letterforms. */
+      h1.title .age {
+        -webkit-text-stroke: 1.1px rgba(20, 13, 5, 0.66);
+        text-shadow: 0 2px 3px rgba(64, 38, 15, 0.35);
+      }
+
+      /* ============ burned edges — real char ============ */
+      /* .burnframe stacks the char crust, the scorched band, corner char,
+         scorch blotches and burn holes, then ONE SVG turbulence/displacement
+         filter ( #charEdge, defined at the end of the body ) eats the whole
+         stack's silhouette irregular. Corners carry the deepest char —
+         that is where paper catches. Pure CSS/SVG: stays with JS off. */
+      .sheet .burnframe {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        filter: url("#charEdge");
+      }
+      .sheet .burnframe > div { position: absolute; }
+      .burnframe .char-ring {
+        inset: 0;
+        box-shadow:
+          inset 0 0 0 13px #150b03,
+          inset 0 0 26px 8px rgba(18, 9, 2, 0.85),
+          inset 0 0 6px 2px rgba(0, 0, 0, 0.9);
+      }
+      .burnframe .scorch-band {
+        inset: 0;
+        box-shadow:
+          inset 0 0 46px 12px rgba(122, 62, 12, 0.38),
+          inset 0 0 110px 30px rgba(146, 84, 20, 0.20);
+      }
+      .burnframe .char-corner { border-radius: 50%; }
+      .burnframe .c-tl {
+        top: -70px; left: -70px; width: 300px; height: 280px;
+        background: radial-gradient(closest-side, rgba(10, 5, 1, 0.97) 0%, rgba(22, 11, 3, 0.90) 38%, rgba(56, 29, 8, 0.55) 62%, rgba(110, 57, 14, 0.20) 80%, transparent 92%);
+      }
+      .burnframe .c-tr {
+        top: -80px; right: -80px; width: 350px; height: 320px;
+        background: radial-gradient(closest-side, rgba(10, 5, 1, 0.97) 0%, rgba(22, 11, 3, 0.92) 38%, rgba(56, 29, 8, 0.58) 62%, rgba(110, 57, 14, 0.22) 80%, transparent 92%);
+      }
+      .burnframe .c-br {
+        bottom: -80px; right: -70px; width: 360px; height: 330px;
+        background: radial-gradient(closest-side, rgba(10, 5, 1, 0.97) 0%, rgba(22, 11, 3, 0.92) 38%, rgba(56, 29, 8, 0.58) 62%, rgba(110, 57, 14, 0.22) 80%, transparent 92%);
+      }
+      .burnframe .c-bl {
+        bottom: -70px; left: -80px; width: 320px; height: 300px;
+        background: radial-gradient(closest-side, rgba(10, 5, 1, 0.97) 0%, rgba(22, 11, 3, 0.90) 38%, rgba(56, 29, 8, 0.55) 62%, rgba(110, 57, 14, 0.20) 80%, transparent 92%);
+      }
+      .burnframe .blotch { border-radius: 50%; }
+      .burnframe .b1 {
+        top: -34px; left: 16%; width: 300px; height: 100px;
+        background: radial-gradient(closest-side, rgba(43, 22, 6, 0.50), rgba(70, 40, 12, 0.26) 55%, transparent 78%);
+      }
+      .burnframe .b2 {
+        top: 20%; right: -52px; width: 130px; height: 320px;
+        background: radial-gradient(closest-side, rgba(43, 22, 6, 0.48), rgba(70, 40, 12, 0.24) 55%, transparent 78%);
+      }
+      .burnframe .b3 {
+        bottom: -40px; left: 30%; width: 380px; height: 120px;
+        background: radial-gradient(closest-side, rgba(38, 19, 5, 0.55), rgba(70, 40, 12, 0.26) 55%, transparent 78%);
+      }
+      .burnframe .b4 {
+        bottom: 16%; left: -54px; width: 140px; height: 300px;
+        background: radial-gradient(closest-side, rgba(43, 22, 6, 0.46), rgba(70, 40, 12, 0.22) 55%, transparent 78%);
+      }
+      .burnframe .b5 {
+        top: 52%; right: -40px; width: 100px; height: 200px;
+        background: radial-gradient(closest-side, rgba(43, 22, 6, 0.36), rgba(70, 40, 12, 0.18) 55%, transparent 78%);
+      }
+      .burnframe .b6 {
+        top: -28px; right: 22%; width: 220px; height: 84px;
+        background: radial-gradient(closest-side, rgba(43, 22, 6, 0.40), rgba(70, 40, 12, 0.20) 55%, transparent 78%);
+      }
+      .burnframe .hole {
+        border-radius: 50%;
+        background: radial-gradient(closest-side, #090401 58%, rgba(26, 13, 3, 0.92) 76%, rgba(140, 76, 16, 0.50) 90%, transparent 100%);
+      }
+      .burnframe .h1 { top: 22px; left: 30px; width: 15px; height: 11px; transform: rotate(-18deg); }
+      .burnframe .h2 { top: 16px; right: 40px; width: 11px; height: 8px; transform: rotate(12deg); }
+      .burnframe .h3 { bottom: 30px; right: 26px; width: 17px; height: 12px; transform: rotate(9deg); }
+      .burnframe .h4 { bottom: 20px; left: 52px; width: 10px; height: 7px; transform: rotate(-8deg); }
+
+      /* warm light the flames throw on the parchment, breathing with them */
+      .sheet .fireglow {
+        position: absolute;
+        left: 0; right: 0; bottom: 0;
+        height: 210px;
+        pointer-events: none;
+        background:
+          radial-gradient(46% 100% at 8% 100%, rgba(255, 116, 22, 0.20), transparent 70%),
+          radial-gradient(46% 100% at 92% 100%, rgba(255, 116, 22, 0.20), transparent 70%),
+          radial-gradient(72% 112% at 50% 112%, rgba(255, 138, 30, 0.17), transparent 72%);
+        transform-origin: 50% 100%;
+        animation: fireflicker 2.7s ease-in-out infinite;
+      }
+      @keyframes fireflicker {
+        0%, 100% { opacity: 0.72; transform: scaleY(0.97); }
+        22% { opacity: 0.95; transform: scaleY(1.02); }
+        41% { opacity: 0.80; transform: scaleY(0.99); }
+        63% { opacity: 1.00; transform: scaleY(1.03); }
+        82% { opacity: 0.78; transform: scaleY(0.98); }
+      }
+
+      /* the living fire itself — canvas painted by the script at the end
+         of the body; empty (invisible) with JS off */
+      .sheet #fireCanvas {
+        position: absolute;
+        left: 0; bottom: 0;
+        width: 100%;
+        height: 240px;
+        pointer-events: none;
+      }
+      @media (max-width: 640px) {
+        .sheet #fireCanvas { height: 180px; }
+        .sheet .fireglow { height: 160px; }
+      }
+      /* reduced motion: the char stays, the fire does not move */
+      @media (prefers-reduced-motion: reduce) {
+        .sheet .fireglow { animation: none; opacity: 0.5; }
+        .sheet #fireCanvas { display: none; }
       }
     </style>
   </head>
   <body>
     <div class="sheet">
       <div class="grain" aria-hidden="true"></div>
+      <div class="burnframe" aria-hidden="true">
+        <div class="char-ring"></div>
+        <div class="scorch-band"></div>
+        <div class="char-corner c-tl"></div>
+        <div class="char-corner c-tr"></div>
+        <div class="char-corner c-br"></div>
+        <div class="char-corner c-bl"></div>
+        <div class="blotch b1"></div>
+        <div class="blotch b2"></div>
+        <div class="blotch b3"></div>
+        <div class="blotch b4"></div>
+        <div class="blotch b5"></div>
+        <div class="blotch b6"></div>
+        <div class="hole h1"></div>
+        <div class="hole h2"></div>
+        <div class="hole h3"></div>
+        <div class="hole h4"></div>
+      </div>
+      <div class="fireglow" aria-hidden="true"></div>
+      <canvas id="fireCanvas" aria-hidden="true"></canvas>
 
       <p class="backbar"><a href="index.html"><img src="coin-badge.png" alt="" />← GoetzMoney — all shows &amp; full schedule</a></p>
 
@@ -656,5 +793,174 @@
         </footer>
       </div>
     </div>
+
+    <!-- turbulence that eats the burn frame's silhouette -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="charEdge" x="-4%" y="-4%" width="108%" height="108%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="4" seed="8" result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+
+    <script>
+      /* Living fire along the sheet's bottom edge and lower corners.
+         Additive sprite particles for the flame tongues, tiny twinkling
+         embers above them. Enhancement only: capped for phones, paused
+         off-screen and when the tab hides, never started for visitors
+         who prefer reduced motion (the burned edges are CSS/SVG and
+         stay either way). */
+      (function () {
+        var canvas = document.getElementById("fireCanvas");
+        if (!canvas || !canvas.getContext) return;
+        var ctx = canvas.getContext("2d");
+        if (!ctx) { canvas.style.display = "none"; return; }
+        var motionOK = window.matchMedia("(prefers-reduced-motion: no-preference)");
+        if (!motionOK.matches) { canvas.style.display = "none"; return; }
+
+        var DPR = Math.min(window.devicePixelRatio || 1, 2);
+        var W = 0, H = 0, flames = [], embers = [];
+        var raf = null, running = false, last = 0, clock = 0;
+
+        /* one soft flame sprite, tinted hot core -> orange -> deep red */
+        var sprite = document.createElement("canvas");
+        sprite.width = sprite.height = 128;
+        var sg = sprite.getContext("2d");
+        var grad = sg.createRadialGradient(64, 70, 2, 64, 64, 62);
+        grad.addColorStop(0, "rgba(255,248,220,1)");
+        grad.addColorStop(0.22, "rgba(255,205,92,0.9)");
+        grad.addColorStop(0.5, "rgba(246,116,26,0.55)");
+        grad.addColorStop(0.78, "rgba(178,44,4,0.20)");
+        grad.addColorStop(1, "rgba(120,20,0,0)");
+        sg.fillStyle = grad;
+        sg.fillRect(0, 0, 128, 128);
+
+        function resize() {
+          var r = canvas.getBoundingClientRect();
+          W = Math.max(0, r.width);
+          H = Math.max(0, r.height);
+          canvas.width = Math.round(W * DPR);
+          canvas.height = Math.round(H * DPR);
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        }
+
+        function spawnFlame() {
+          var x, baseY = H, roll = Math.random();
+          if (roll < 0.30) {
+            /* corners burn hardest; some tongues start up the lower sides */
+            x = Math.random() < 0.5 ? Math.random() * W * 0.10 : W - Math.random() * W * 0.10;
+            if (Math.random() < 0.45) baseY = H - Math.random() * H * 0.34;
+          } else {
+            x = Math.random() * W;
+          }
+          var size = 22 + Math.random() * 46;
+          flames.push({
+            x: x, y: baseY + size * 0.25, baseY: baseY,
+            vx: (Math.random() - 0.5) * 6,
+            vy: -(34 + Math.random() * 66) * (0.7 + size / 60),
+            size: size, age: 0, life: 0.85 + Math.random() * 0.95,
+            sway: Math.random() * Math.PI * 2, swaySpeed: 2 + Math.random() * 3,
+            maxRise: H * (0.42 + Math.random() * 0.22)
+          });
+        }
+
+        function spawnEmber() {
+          embers.push({
+            x: Math.random() * W, y: H - Math.random() * 6,
+            vx: (Math.random() - 0.5) * 10, vy: -(26 + Math.random() * 62),
+            r: 0.7 + Math.random() * 1.7, age: 0, life: 2.2 + Math.random() * 2.6,
+            tw: Math.random() * Math.PI * 2
+          });
+        }
+
+        function frame(now) {
+          if (!running) return;
+          var dt = Math.min(0.05, (now - last) / 1000 || 0.016);
+          last = now;
+          clock += dt;
+          var flick = 0.8 + 0.14 * Math.sin(clock * 11.3) + 0.08 * Math.sin(clock * 23.7 + 1.7) + 0.06 * Math.sin(clock * 5.1 + 0.4);
+          var maxF = W < 640 ? 58 : 108, maxE = W < 640 ? 16 : 34;
+          var spawnF = dt * 95 * flick, spawnE = dt * 9 * flick;
+          while (spawnF > 0) { if (Math.random() < spawnF && flames.length < maxF) spawnFlame(); spawnF -= 1; }
+          while (spawnE > 0) { if (Math.random() < spawnE && embers.length < maxE) spawnEmber(); spawnE -= 1; }
+
+          ctx.clearRect(0, 0, W, H);
+          ctx.globalCompositeOperation = "lighter";
+
+          /* hot seam where flame meets char */
+          var base = ctx.createLinearGradient(0, H - 26, 0, H);
+          base.addColorStop(0, "rgba(255,120,20,0)");
+          base.addColorStop(1, "rgba(255,110,16," + (0.16 * flick).toFixed(3) + ")");
+          ctx.fillStyle = base;
+          ctx.fillRect(0, H - 26, W, 26);
+
+          for (var i = flames.length - 1; i >= 0; i--) {
+            var p = flames[i];
+            p.age += dt;
+            if (p.age >= p.life || p.baseY - p.y > p.maxRise) { flames.splice(i, 1); continue; }
+            p.sway += p.swaySpeed * dt;
+            p.x += p.vx * dt + Math.sin(p.sway) * 14 * dt;
+            p.y += p.vy * dt;
+            var t = p.age / p.life;
+            var scale = (1 - t * 0.62) * (0.75 + 0.25 * Math.sin(Math.PI * Math.min(1, t * 1.15)));
+            var s = p.size * scale * 1.8;
+            ctx.globalAlpha = Math.sin(Math.PI * Math.min(1, t)) * 0.34;
+            ctx.drawImage(sprite, p.x - s / 2, p.y - s * 0.62, s, s);
+          }
+          ctx.globalAlpha = 1;
+
+          for (var j = embers.length - 1; j >= 0; j--) {
+            var e = embers[j];
+            e.age += dt;
+            if (e.age >= e.life || e.y < -6) { embers.splice(j, 1); continue; }
+            e.tw += dt * 9;
+            e.x += (e.vx + Math.sin(e.tw * 0.6) * 9) * dt;
+            e.y += e.vy * dt;
+            var a = Math.max(0, Math.sin(Math.PI * (e.age / e.life))) * (0.55 + 0.45 * Math.sin(e.tw));
+            ctx.beginPath();
+            ctx.fillStyle = "rgba(255," + (150 + Math.floor(60 * Math.sin(e.tw))) + ",40," + (a * 0.9).toFixed(3) + ")";
+            ctx.arc(e.x, e.y, e.r, 0, 6.2832);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+          ctx.globalCompositeOperation = "source-over";
+          raf = requestAnimationFrame(frame);
+        }
+
+        function start() {
+          if (running || !motionOK.matches) return;
+          resize();
+          running = true;
+          last = performance.now();
+          raf = requestAnimationFrame(frame);
+        }
+        function stop() {
+          running = false;
+          if (raf) cancelAnimationFrame(raf);
+          raf = null;
+          ctx.clearRect(0, 0, W, H);
+        }
+
+        resize();
+        window.addEventListener("resize", resize);
+        document.addEventListener("visibilitychange", function () {
+          if (document.hidden) stop(); else start();
+        });
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) { if (en.isIntersecting) start(); else stop(); });
+          }, { threshold: 0.02 }).observe(canvas);
+        } else {
+          start();
+        }
+        if (motionOK.addEventListener) {
+          motionOK.addEventListener("change", function () {
+            if (motionOK.matches) { canvas.style.display = ""; start(); }
+            else { stop(); canvas.style.display = "none"; }
+          });
+        }
+      })();
+    </script>
   </body>
 </html>
