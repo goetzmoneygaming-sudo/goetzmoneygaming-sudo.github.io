@@ -1040,6 +1040,34 @@
     .gm-nav-links a { min-height: 48px; font-size: 15px; padding: 4px 10px; }
     section[id] { scroll-margin-top: 64px; }
   }
+
+  /* ============ season premiere banner (temporary — remove after Sunday's premiere stream) ============ */
+  #premiere-banner {
+    position: relative; z-index: 800;
+    background: linear-gradient(90deg, var(--panel-2), var(--purple) 50%, var(--panel-2));
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  }
+  #premiere-banner .premiere-banner-inner {
+    max-width: 1280px; margin: 0 auto; padding: 9px 16px;
+    display: flex; align-items: center; justify-content: center; gap: 10px 16px; flex-wrap: wrap;
+  }
+  #premiere-banner .premiere-banner-text {
+    font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; font-size: clamp(14px, 2.4vw, 19px); line-height: 1.25;
+    color: var(--gold); text-align: center;
+  }
+  #premiere-banner .premiere-banner-link {
+    flex-shrink: 0;
+    font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 14px; white-space: nowrap;
+    background: var(--gold); color: var(--ink); text-decoration: none;
+    padding: 5px 14px; border-radius: 6px;
+  }
+  #premiere-banner .premiere-banner-link:hover { background: var(--cream); }
+  @media (max-width: 760px) {
+    #premiere-banner .premiere-banner-inner { padding: 8px 12px; }
+  }
 </style>
 </head>
 <body>
@@ -1069,6 +1097,13 @@
   </div>
 </nav>
 
+<!-- ============ SEASON PREMIERE BANNER (temporary — remove after Sunday's premiere stream) ============ -->
+<div id="premiere-banner" role="region" aria-label="Season premiere announcement">
+  <div class="premiere-banner-inner">
+    <span class="premiere-banner-text">SEASON PREMIERE — SUNDAY 8 PM CT · UPDATED. UPGRADED. STILL CAN'T BUY A WIN.</span>
+    <a class="premiere-banner-link" href="https://twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch Live</a>
+  </div>
+</div>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
