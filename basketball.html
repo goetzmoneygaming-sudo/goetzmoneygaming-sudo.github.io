@@ -314,9 +314,93 @@
         .booth-line .caret { animation: none; }
         .btn { transition: none; }
       }
+
+      /* ---------- Court-diagram backdrop: one court split across the side gutters ---------- */
+      .court-bg {
+        position: fixed; inset: 0; z-index: 0; overflow: hidden;
+        pointer-events: none; opacity: .45;
+      }
+      @media (prefers-color-scheme: dark) { .court-bg { opacity: .55; } }
+      .wrap { position: relative; z-index: 1; }
+      .court-half {
+        position: absolute; top: -200px; bottom: -200px; width: 50vw; overflow: hidden;
+        will-change: transform;
+        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 70px, #000 calc(max(70px, (100vw - 1080px) / 2 - 140px)), transparent calc(max(70px, (100vw - 1080px) / 2 - 20px)));
+        mask-image: linear-gradient(to right, transparent 0, #000 70px, #000 calc(max(70px, (100vw - 1080px) / 2 - 140px)), transparent calc(max(70px, (100vw - 1080px) / 2 - 20px)));
+      }
+      .court-half.left { left: 0; }
+      .court-half.right { right: 0; transform: scaleX(-1); }
+      .court-svg {
+        position: absolute; top: 50%; left: 100%; transform: translate(-50%, -50%);
+        height: calc(112vh + 120px); width: auto; aspect-ratio: 940 / 500; display: block;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 87%, transparent 100%);
+        mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 87%, transparent 100%);
+      }
+      .court-svg .cln { fill: none; stroke-width: 1.5; }
+      .court-svg .cln-court { stroke: var(--court-bright); }
+      .court-svg .cln-gold { stroke: var(--gold); }
+      .court-svg .cln-purple { stroke: var(--purple); }
+      .court-svg .cln-dash { stroke-dasharray: 7 6; }
+      .court-svg .cfill-lane { fill: var(--purple); fill-opacity: .10; }
+      .court-svg .cfill-circle { fill: var(--gold); fill-opacity: .07; }
+      @media (max-width: 760px) {
+        .court-bg { opacity: .30; }
+        .court-svg { height: max(520px, 150vw); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .court-half { will-change: auto; }
+      }
     </style>
   </head>
   <body>
+
+    <!-- Court-diagram backdrop: one full court, split across the left/right gutters -->
+    <div class="court-bg" aria-hidden="true">
+      <div class="court-half left">
+        <svg class="court-svg" viewBox="0 0 940 500" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+          <defs>
+            <g id="court-half-a">
+              <rect class="cfill-lane" x="20" y="170" width="190" height="160" />
+              <rect class="cln cln-court" x="20" y="170" width="190" height="160" />
+              <path class="cln cln-court" d="M210 190 A60 60 0 0 0 210 310" />
+              <path class="cln cln-court cln-dash" d="M210 190 A60 60 0 0 1 210 310" />
+              <path class="cln cln-court" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
+              <path class="cln cln-gold" d="M65 205 A45 45 0 0 1 65 295" />
+              <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
+              <circle class="cln cln-gold" cx="65" cy="250" r="12" />
+            </g>
+          </defs>
+          <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
+          <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
+          <circle class="cfill-circle" cx="470" cy="250" r="90" />
+          <circle class="cln cln-purple" cx="470" cy="250" r="90" />
+          <use href="#court-half-a" />
+          <use href="#court-half-a" transform="translate(940 0) scale(-1 1)" />
+        </svg>
+      </div>
+      <div class="court-half right">
+        <svg class="court-svg" viewBox="0 0 940 500" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true">
+          <defs>
+            <g id="court-half-b">
+              <rect class="cfill-lane" x="20" y="170" width="190" height="160" />
+              <rect class="cln cln-court" x="20" y="170" width="190" height="160" />
+              <path class="cln cln-court" d="M210 190 A60 60 0 0 0 210 310" />
+              <path class="cln cln-court cln-dash" d="M210 190 A60 60 0 0 1 210 310" />
+              <path class="cln cln-court" d="M20 40 L176 40 A237.5 237.5 0 0 1 176 460 L20 460" />
+              <path class="cln cln-gold" d="M65 205 A45 45 0 0 1 65 295" />
+              <line class="cln cln-gold" x1="45" y1="215" x2="45" y2="285" />
+              <circle class="cln cln-gold" cx="65" cy="250" r="12" />
+            </g>
+          </defs>
+          <rect class="cln cln-gold" x="20" y="20" width="900" height="460" />
+          <line class="cln cln-gold" x1="470" y1="20" x2="470" y2="480" />
+          <circle class="cfill-circle" cx="470" cy="250" r="90" />
+          <circle class="cln cln-purple" cx="470" cy="250" r="90" />
+          <use href="#court-half-b" />
+          <use href="#court-half-b" transform="translate(940 0) scale(-1 1)" />
+        </svg>
+      </div>
+    </div>
     <div class="wrap">
       <p class="backbar"><a href="index.html"><img src="coin-badge.png" alt="" />← GoetzMoney — all shows &amp; full schedule</a></p>
 
@@ -635,6 +719,39 @@
         }
         tickClock();
         setInterval(tickClock, 1000);
+      })();
+    </script>
+
+    <script>
+      // Court-diagram parallax: the gutter courts drift slowly against the scroll
+      // (~0.2x scroll rate up top, easing out to a capped total drift; transform-only).
+      (function () {
+        "use strict";
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        var left = document.querySelector(".court-half.left");
+        var right = document.querySelector(".court-half.right");
+        if (!left || !right) return;
+        function drift(y, rate, max) { return -max * (1 - Math.exp(-y * rate / max)); }
+        var tL = 0, tR = 0, cL = 0, cR = 0, running = false;
+        function frame() {
+          cL += (tL - cL) * 0.075;
+          cR += (tR - cR) * 0.075;
+          if (Math.abs(tL - cL) < 0.05) cL = tL;
+          if (Math.abs(tR - cR) < 0.05) cR = tR;
+          left.style.transform = "translate3d(0," + cL.toFixed(2) + "px,0)";
+          right.style.transform = "translate3d(0," + cR.toFixed(2) + "px,0) scaleX(-1)";
+          if (cL !== tL || cR !== tR) { requestAnimationFrame(frame); }
+          else { running = false; }
+        }
+        function kick() { if (!running) { running = true; requestAnimationFrame(frame); } }
+        function onScroll() {
+          var y = window.scrollY || window.pageYOffset;
+          tL = drift(y, 0.22, 190);
+          tR = drift(y, 0.19, 150);
+          kick();
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
       })();
     </script>
   </body>
