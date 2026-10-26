@@ -34,8 +34,69 @@
   footer{margin-top:52px;text-align:center}
   .fine{font-size:12.5px;color:#6d888e;margin-top:6px}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ==== 18+ ENTRY GATE (shared across all pages) ==== */
+.gm-age-gate{position:fixed;inset:0;z-index:2147483000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;background:#08050d;background:radial-gradient(120% 120% at 50% 0%,#1a1030 0%,#0d0716 55%,#08050d 100%)}
+html.gm-age-locked .gm-age-gate{display:flex}
+html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
+.gm-age-panel{margin:auto;width:100%;max-width:430px;background:#120a1f;border:1px solid #3d1466;border-top:3px solid #ffc93c;border-radius:14px;padding:34px 28px 28px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.gm-age-logo{display:block;width:min(300px,82%);height:auto;margin:0 auto 20px}
+.gm-age-badge{display:inline-block;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:3px;font-size:13px;color:#08050d;background:#ffc93c;border-radius:999px;padding:5px 14px 4px;margin-bottom:16px}
+.gm-age-text{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:20px;line-height:1.45;color:#f7f3ea;font-weight:600;margin:0}
+.gm-age-sub{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:16px;line-height:1.45;color:#b9aed6;font-weight:500;margin:10px 0 0}
+.gm-age-check{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#1a1030;border:1px solid #3d1466;border-radius:10px;padding:15px 16px;margin:22px 0 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gm-age-check input[type=checkbox]{width:27px;height:27px;min-width:27px;margin:1px 0 0;accent-color:#ffc93c;cursor:pointer}
+.gm-age-check-label{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:18px;font-weight:600;color:#f7f3ea;line-height:1.3;padding-top:3px}
+.gm-age-enter{display:block;width:100%;min-height:54px;border:0;border-radius:10px;background:#ffc93c;color:#08050d;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-weight:700;font-size:20px;letter-spacing:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gm-age-enter:disabled{background:#3d1466;color:#8f83ad;cursor:not-allowed}
+.gm-age-enter:not(:disabled):hover{background:#e6a800}
+.gm-age-mistake{margin:16px 0 0;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:500;color:#9d92bd;line-height:1.4}
+@media (max-width:480px){.gm-age-panel{padding:28px 20px 22px}.gm-age-text{font-size:19px}}
+</style>
+<script>
+/* 18+ gate lock: runs in the document head, before the page paints. */
+(function(){try{if(!localStorage.getItem('gm_age_confirmed')){document.documentElement.classList.add('gm-age-locked');}}catch(e){document.documentElement.classList.add('gm-age-locked');}})();
+</script>
 </head>
 <body>
+<!-- ==== 18+ ENTRY GATE (shared across all pages) ==== -->
+<div class="gm-age-gate" id="gmAgeGate" role="dialog" aria-modal="true" aria-labelledby="gmAgeText">
+  <div class="gm-age-panel">
+    <img class="gm-age-logo" src="goetz-money-wordmark.png" alt="Goetz Money">
+    <div class="gm-age-badge">18+ ONLY</div>
+    <p class="gm-age-text" id="gmAgeText">This site &mdash; and the streams behind it &mdash; run on adult language and grown-up content.</p>
+    <p class="gm-age-sub">Checking the box is the whole door policy. It stays checked on this device.</p>
+    <label class="gm-age-check" for="gmAgeCheck">
+      <input type="checkbox" id="gmAgeCheck">
+      <span class="gm-age-check-label">I am 18 years of age or older</span>
+    </label>
+    <button class="gm-age-enter" id="gmAgeEnter" type="button" disabled>ENTER</button>
+    <p class="gm-age-mistake">Landed here by mistake? No hard feelings &mdash; just head back the way you came.</p>
+  </div>
+</div>
+<script>
+/* 18+ gate wiring: ENTER stays disabled until the box is checked. Confirming
+   stores gm_age_confirmed in localStorage, so it's once per browser/device. */
+(function(){
+  var gate=document.getElementById('gmAgeGate');
+  if(!gate){return;}
+  if(!document.documentElement.classList.contains('gm-age-locked')){
+    if(gate.parentNode){gate.parentNode.removeChild(gate);}
+    return;
+  }
+  var box=document.getElementById('gmAgeCheck');
+  var btn=document.getElementById('gmAgeEnter');
+  box.addEventListener('change',function(){btn.disabled=!box.checked;});
+  btn.addEventListener('click',function(){
+    if(!box.checked){return;}
+    try{localStorage.setItem('gm_age_confirmed','1');}catch(e){}
+    document.documentElement.classList.remove('gm-age-locked');
+    if(gate.parentNode){gate.parentNode.removeChild(gate);}
+  });
+})();
+</script>
+
 <div class="wrap">
   <a class="back" href="index.html">&larr; GoetzMoney — all shows</a>
   <header>
