@@ -856,6 +856,39 @@
     border: 0;
   }
 
+  /* most-recent-video dated entries (the VOD archive list) */
+  .recent-videos-list { margin-top: 30px; display: flex; flex-direction: column; gap: 16px; }
+  .recent-video-entry {
+    display: flex; gap: 18px; align-items: stretch;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,201,60,0.2);
+    border-radius: 6px; overflow: hidden;
+    text-decoration: none;
+    transition: transform 160ms ease, border-color 160ms ease;
+  }
+  .recent-video-entry:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .recent-video-thumb {
+    flex: 0 0 240px; aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, var(--purple), var(--panel-2));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .recent-video-thumb .rv-play {
+    width: 54px; height: 54px; border-radius: 50%;
+    border: 1px solid rgba(255,201,60,0.5);
+    background: rgba(8,5,13,0.55);
+    color: var(--gold); font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .recent-video-meta { padding: 14px 18px 14px 0; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .recent-video-date { font-size: 11px; letter-spacing: 0.06em; color: var(--gold); text-transform: uppercase; }
+  .recent-video-title { font-family: "Rajdhani", sans-serif; font-weight: 700; font-size: 20px; line-height: 1.25; color: var(--cream); }
+  .recent-video-link { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.05em; color: rgba(247,243,234,0.55); }
+  @media (max-width: 640px) {
+    .recent-video-entry { flex-direction: column; }
+    .recent-video-thumb { flex: none; width: 100%; }
+    .recent-video-meta { padding: 12px 16px 16px; }
+  }
+
   /* ============ footer ============ */
 
   footer { background: var(--ink); padding: 70px 24px 46px; text-align: center; position: relative; }
@@ -1091,7 +1124,7 @@
       <a href="#leaderboard">Leaderboard</a>
       <a href="#cache-section">Cache</a>
       <a href="#clips">Clips</a>
-      <a href="#featured-video">Highlight</a>
+      <a href="#featured-video">Video</a>
       <a class="gm-nav-live" href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch Live</a>
     </div>
   </div>
@@ -1347,15 +1380,32 @@
   </div>
 </section>
 
-<!-- ============ FEATURED VIDEO ============ -->
+<!-- ============ MOST RECENT VIDEO (dated VOD home; the player is fed by featured_video.json) ============ -->
 <section id="featured-video" class="wrap circuit-bg">
   <div class="panel-shell">
     <div class="panel-glow"></div>
     <div class="panel">
       <span class="eyebrow">Watch</span>
-      <h2 class="section-title display">Latest Highlight</h2>
+      <h2 class="section-title display">Most Recent Video</h2>
       <div class="video-embed-wrap" id="video-embed-wrap">
         <p class="clips-empty mono">No featured video set yet.</p>
+      </div>
+      <!-- POST-STREAM ROUTINE — new VOD entry: paste a copy of the
+           .recent-video-entry block directly below this comment,
+           newest first, with the stream's date and exact VOD title.
+           Also set featured_video.json to the new VOD —
+           { "id": "<twitch-vod-id>", "platform": "twitch" } — so the
+           newest video plays in the player above. Older entries stay:
+           this list is the dated archive. -->
+      <div class="recent-videos-list" id="recent-videos-list">
+        <a class="recent-video-entry" href="https://www.twitch.tv/videos/2910973783" target="_blank" rel="noopener">
+          <span class="recent-video-thumb"><span class="rv-play">▶</span></span>
+          <span class="recent-video-meta">
+            <span class="recent-video-date mono">October 25, 2026</span>
+            <span class="recent-video-title">Comp in Stadium! Overwatch Drops are on!</span>
+            <span class="recent-video-link">Watch on Twitch →</span>
+          </span>
+        </a>
       </div>
     </div>
   </div>
