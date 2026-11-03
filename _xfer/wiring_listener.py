@@ -87,13 +87,26 @@ def take(path):
         return None
 
 
-def resolve_item(token):
+def resolve_item(token, ledger=None, owner=None):
+    """Cards and creatures share the species namespace, so a bare
+    name is ambiguous. Resolve against what the owner actually
+    holds: the kind they own wins; if they own both, the card wins
+    (the trade command's original surface); if they own neither,
+    return the card reading and let the ledger raise its ownership
+    error."""
     t = token.strip().lower().replace(" ", "")
-    if t in ledger_mod.CARD_IDS:
+    is_card = t in ledger_mod.CARD_IDS
+    is_creature = t in ledger_mod.SPECIES
+    if not (is_card or is_creature):
+        return None
+    if ledger is not None and owner is not None and is_card and is_creature:
+        owns_card = ledger.owns(owner, {"kind": "card", "id": t})
+        owns_creature = ledger.owns(owner, {"kind": "creature", "id": t})
+        if owns_creature and not owns_card:
+            return {"kind": "creature", "id": t}
+    if is_card:
         return {"kind": "card", "id": t}
-    if t in ledger_mod.SPECIES:
-        return {"kind": "creature", "id": t}
-    return None
+    return {"kind": "creature", "id": t}
 
 
 class Listener:
@@ -152,8 +165,8 @@ class Listener:
             announce("Trade usage: !trade @viewer <your card or creature> <their card or creature>")
             return
         target = ledger_mod.norm_user(toks[0].lstrip("@"))
-        give = resolve_item(toks[1])
-        want = resolve_item(toks[2])
+        give = resolve_item(toks[1], self.ledger, user)
+        want = resolve_item(toks[2], self.ledger, target)
         if give is None or want is None:
             announce("Trade failed: I don't know one of those cards/creatures. Names are the Series 1 names, one word each.")
             return
