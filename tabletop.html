@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content="Cache's D&D: Age of Ashes — a Pathfinder 2e campaign run by Cache, an AI dungeon master, with one human player hearing everything for the first time. Saturdays 2:00–3:00 PM CT on Twitch." />
-    <meta property="og:title" content="Cache's D&D: Age of Ashes — GoetzMoney" />
+    <meta name="description" content="Cache's Tabletop RPG — a tabletop roleplaying campaign run by Cache, an AI game master, with one human player hearing everything for the first time. Saturdays 2:00–3:00 PM CT on Twitch." />
+    <meta property="og:title" content="Cache's Tabletop RPG — GoetzMoney" />
     <meta property="og:description" content="One machine runs the world. One human walks into it blind. Saturdays 2:00–3:00 PM CT on twitch.tv/goetzmoney." />
     <meta property="og:image" content="hero-poster.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -59,15 +59,19 @@
         max-width: 1060px;
         margin: 0 auto;
         /* The parchment is ONE photograph — a single tall burned
-           sheet, stretched to the sheet's exact box (background-size:
-           100% 100%). No slices, no bands, no seams: the burn holes
-           run down both edges at the photograph's own uneven
-           intervals, and its dark surround blends into this base
-           colour, sampled from it. */
+           sheet (1120x2240, a 1:2 portrait). It is painted at its
+           natural aspect, fitted to the sheet's width
+           (background-size: 100% auto) and tiled vertically
+           (repeat-y): never force-fit, so the burn holes down both
+           edges keep the photograph's own proportions at any page
+           length. Tiles join inside the photograph's own dark
+           surround, which blends into this base colour, sampled
+           from it. */
         background-color: #0b0a08;
         background-image: url("parchment-full.webp");
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+        background-size: 100% auto;
+        background-position: center top;
+        background-repeat: repeat-y;
         border-radius: 4px;
         box-shadow:
           0 30px 80px rgba(0, 0, 0, 0.65),
@@ -705,9 +709,9 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
             <text x="50" y="20" text-anchor="middle" font-family="Cinzel, serif" font-size="11" font-weight="700" fill="#3c4c34">N</text>
           </svg>
 
-          <p class="eyebrow">A Pathfinder Second Edition Campaign</p>
-          <h1 class="title">Cache&rsquo;s D&amp;D<span class="age">Age of Ashes</span></h1>
-          <p class="tagline">A <b>Pathfinder 2e</b> campaign run by an <b>AI dungeon master</b> — one machine keeps the world, and one human walks into it blind.</p>
+          <p class="eyebrow">A Tabletop Roleplaying Campaign</p>
+          <h1 class="title">Cache&rsquo;s Tabletop RPG<span class="age">Saturdays</span></h1>
+          <p class="tagline">A <b>tabletop roleplaying</b> campaign run by an <b>AI game master</b> — one machine keeps the world, and one human walks into it blind.</p>
 
           <div class="showtimes" role="status">
             <div><span class="k">When</span><span class="v">Saturdays</span></div>
@@ -787,7 +791,7 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
 
           <div class="party">
             <article class="card cache">
-              <p class="role">Dungeon Master</p>
+              <p class="role">Game Master</p>
               <h3>CACHE</h3>
               <div class="eyes" aria-hidden="true"><i></i><i></i></div>
               <div class="mouth" aria-hidden="true"></div>
@@ -829,7 +833,7 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
           <div class="how">
             <div class="step">
               <p class="num">I</p>
-              <h3>One DM, Every Soul</h3>
+              <h3>One GM, Every Soul</h3>
               <p>Cache runs the world <em>and</em> plays Kess, Vervain, and Thatch as three separate people — distinct voices, distinct tempers, and knowledge kept apart. What one companion knows, the others may not.</p>
             </div>
             <div class="step">
@@ -870,7 +874,7 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
         <!-- ======= FOOTER ======= -->
         <footer class="page-foot">
           <p class="foot-title">See You at the Table</p>
-          <p>Cache&rsquo;s D&amp;D: Age of Ashes — a GoetzMoney production. The dice are honest; the dungeon master is a computer.</p>
+          <p>Cache&rsquo;s Tabletop RPG — a GoetzMoney production. The dice are honest; the game master is a computer.</p>
           <p class="fine">Goetz Money · wired to win, occasionally to lose gracefully · <a href="index.html">Back to all shows</a></p>
           <p class="fine">18+ content — adults only.</p>
         </footer>
