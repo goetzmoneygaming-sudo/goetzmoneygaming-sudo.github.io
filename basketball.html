@@ -408,6 +408,62 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
 /* 18+ gate lock: runs in the document head, before the page paints. */
 (function(){try{if(!localStorage.getItem('gm_age_confirmed')){document.documentElement.classList.add('gm-age-locked');}}catch(e){document.documentElement.classList.add('gm-age-locked');}})();
 </script>
+<style>
+.gm-nav{--gold:#ffc93c;--gold-2:#e6a800;--ink:#08050d;--cream:#f7f3ea;--panel-2:#1a1030;--purple:#3d1466;--purple-2:#7b3fd4;z-index:1200}
+  /* ============ top tab nav (sticky) — to add a future page tab, add one <a> line in .gm-nav-links ============ */
+  .gm-nav {
+    position: sticky; top: 0; z-index: 900;
+    background: linear-gradient(180deg, rgba(26,16,48,0.98), rgba(18,10,31,0.98));
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  .gm-nav-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 10px;
+    display: flex; align-items: stretch; gap: 4px;
+  }
+  .gm-nav-brand {
+    display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+    padding: 6px 10px 6px 4px; text-decoration: none;
+  }
+  .gm-nav-brand img { width: 36px; height: 36px; object-fit: contain; display: block; }
+  .gm-nav-brand span {
+    font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 19px; color: var(--cream); white-space: nowrap;
+  }
+  .gm-nav-brand span b { color: var(--gold); font-weight: 700; }
+  .gm-nav-links {
+    display: flex; align-items: stretch; gap: 2px; margin-left: auto;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .gm-nav-links::-webkit-scrollbar { display: none; }
+  .gm-nav-links a {
+    display: flex; align-items: center; min-height: 52px; padding: 4px 11px;
+    font-family: "Rajdhani", sans-serif; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 15.5px; color: rgba(247,243,234,0.82);
+    text-decoration: none; white-space: nowrap; position: relative;
+  }
+  .gm-nav-links a:hover { color: var(--gold); }
+  .gm-nav-links a.active { color: var(--gold); }
+  .gm-nav-links a.active::after {
+    content: ""; position: absolute; left: 9px; right: 9px; bottom: 5px;
+    height: 3px; border-radius: 2px; background: var(--gold);
+  }
+  .gm-nav-links a.gm-nav-live {
+    align-self: center; min-height: 44px; margin-left: 8px; padding: 4px 14px;
+    background: var(--purple-2); color: #fff; border-radius: 8px; font-weight: 700;
+  }
+  .gm-nav-links a.gm-nav-live:hover { background: var(--gold); color: var(--ink); }
+  .gm-nav-links a.gm-nav-live.active { color: #fff; }
+  .gm-nav-links a.gm-nav-live.active::after { display: none; }
+  section[id] { scroll-margin-top: 72px; }
+  @media (max-width: 760px) {
+    .gm-nav-brand span { display: none; }
+    .gm-nav-links a { min-height: 48px; font-size: 15px; padding: 4px 10px; }
+    section[id] { scroll-margin-top: 64px; }
+  }
+
+</style>
+
 </head>
   <body>
 <!-- ==== 18+ ENTRY GATE (shared across all pages) ==== -->
@@ -446,6 +502,23 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
   });
 })();
 </script>
+
+<nav class="gm-nav" aria-label="Site sections">
+  <div class="gm-nav-inner">
+    <a class="gm-nav-brand" href="index.html" aria-label="Goetz Money — home">
+      <img src="coin-badge.png" alt="">
+      <span>Goetz<b>Money</b></span>
+    </a>
+    <div class="gm-nav-links" id="gm-nav-links">
+      <a href="index.html">Home</a>
+      <a href="gaming.html">Gaming</a>
+      <a href="basketball.html" class="active">Basketball</a>
+      <a href="tabletop.html">Tabletop Gaming</a>
+      <a href="glitchlings.html">Glitchlings</a>
+      <a class="gm-nav-live" href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch Live</a>
+    </div>
+  </div>
+</nav>
 
 
     <!-- Court-diagram backdrop: one court rotated 90 degrees and stretched down the full page.
