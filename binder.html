@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Binder — GoetzMoney</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&family=Bangers&display=swap" rel="stylesheet">
+<style>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&family=Bangers&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --ink:      #08050d;
+    --panel:    #120a1f;
+    --panel-2:  #1a1030;
+    --purple:   #3d1466;
+    --purple-2: #7b3fd4;
+    --gold:     #ffc93c;
+    --gold-2:   #e6a800;
+    --cream:    #f7f3ea;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: "Space Grotesk", sans-serif;
+    overflow-x: hidden;
+  }
+
+  .display  { font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+  .comic    { font-family: "Bangers", cursive; letter-spacing: 0.02em; }
+  .mono     { font-family: "JetBrains Mono", monospace; }
+
+  a { color: inherit; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ circuit texture (shared) ============ */
+
+  .circuit-bg {
+    position: relative;
+  }
+  .circuit-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,201,60,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,201,60,0.06) 1px, transparent 1px);
+
+  .binder-head { padding: 120px 0 8px; text-align: center; }
+  .binder-head h1 { font-size: clamp(38px, 6vw, 64px); color: var(--gold); }
+  .binder-head .sub { color: #cbbfe8; margin-top: 6px; font-size: 17px; }
+  .binder-user { text-align: center; margin: 18px 0 4px; font-size: 20px; }
+  .binder-user b { color: var(--gold); }
+  .progress { max-width: 520px; margin: 14px auto 6px; background: var(--panel-2); border: 1px solid var(--purple); border-radius: 999px; height: 16px; overflow: hidden; }
+  .progress > div { height: 100%; background: linear-gradient(90deg, var(--purple-2), var(--gold)); }
+  .progress-label { text-align: center; color: #cbbfe8; font-size: 14px; margin-bottom: 22px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 16px; padding-bottom: 30px; }
+  .card { background: var(--panel); border: 1px solid var(--purple); border-radius: 12px; padding: 12px; text-align: center; }
+  .card img { width: 100%; border-radius: 8px; display: block; }
+  .card .nm { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; margin-top: 9px; }
+  .card .meta { font-size: 12.5px; color: #cbbfe8; letter-spacing: .04em; text-transform: uppercase; }
+  .card .badges { margin-top: 6px; font-size: 13.5px; color: var(--gold); min-height: 18px; }
+  .empty { text-align: center; color: #cbbfe8; padding: 34px 0 46px; font-size: 17px; }
+  .collectors { max-width: 640px; margin: 0 auto; padding-bottom: 40px; }
+  .collector { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border: 1px solid var(--purple); border-radius: 10px; padding: 13px 18px; margin-bottom: 10px; text-decoration: none; }
+  .collector:hover { border-color: var(--gold); }
+  .collector .who { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; }
+  .collector .stat { color: #cbbfe8; font-size: 14px; }
+  .foot { text-align: center; color: #9d92bd; font-size: 13.5px; padding: 8px 0 38px; }
+  .foot a { color: var(--gold); }
+
+  /* ============ top tab nav (sticky) — to add a future page tab, add one <a> line in .gm-nav-links ============ */
+  .gm-nav {
+    position: sticky; top: 0; z-index: 900;
+    background: linear-gradient(180deg, rgba(26,16,48,0.98), rgba(18,10,31,0.98));
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  .gm-nav-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 10px;
+    display: flex; align-items: stretch; gap: 4px;
+  }
+  .gm-nav-brand {
+    display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+    padding: 6px 10px 6px 4px; text-decoration: none;
+  }
+  .gm-nav-brand img { width: 36px; height: 36px; object-fit: contain; display: block; }
+  .gm-nav-brand span {
+    font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 19px; color: var(--cream); white-space: nowrap;
+  }
+  .gm-nav-brand span b { color: var(--gold); font-weight: 700; }
+  .gm-nav-links {
+    display: flex; align-items: stretch; gap: 2px; margin-left: auto;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .gm-nav-links::-webkit-scrollbar { display: none; }
+  .gm-nav-links a {
+    display: flex; align-items: center; min-height: 52px; padding: 4px 11px;
+    font-family: "Rajdhani", sans-serif; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 15.5px; color: rgba(247,243,234,0.82);
+    text-decoration: none; white-space: nowrap; position: relative;
+  }
+  .gm-nav-links a:hover { color: var(--gold); }
+  .gm-nav-links a.active { color: var(--gold); }
+  .gm-nav-links a.active::after {
+    content: ""; position: absolute; left: 9px; right: 9px; bottom: 5px;
+    height: 3px; border-radius: 2px; background: var(--gold);
+  }
+  .gm-nav-links a.gm-nav-live {
+    align-self: center; min-height: 44px; margin-left: 8px; padding: 4px 14px;
+    background: var(--purple-2); color: #fff; border-radius: 8px; font-weight: 700;
+  }
+  .gm-nav-links a.gm-nav-live:hover { background: var(--gold); color: var(--ink); }
+  .gm-nav-links a.gm-nav-live.active { color: #fff; }
+  .gm-nav-links a.gm-nav-live.active::after { display: none; }
+  section[id] { scroll-margin-top: 72px; }
+  @media (max-width: 760px) {
+    .gm-nav-brand span { display: none; }
+    .gm-nav-links a { min-height: 48px; font-size: 15px; padding: 4px 10px; }
+    section[id] { scroll-margin-top: 64px; }
+  }
+/* ==== 18+ ENTRY GATE (shared across all pages) ==== */
+.gm-age-gate{position:fixed;inset:0;z-index:2147483000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;background:#08050d;background:radial-gradient(120% 120% at 50% 0%,#1a1030 0%,#0d0716 55%,#08050d 100%)}
+html.gm-age-locked .gm-age-gate{display:flex}
+html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
+.gm-age-panel{margin:auto;width:100%;max-width:430px;background:#120a1f;border:1px solid #3d1466;border-top:3px solid #ffc93c;border-radius:14px;padding:34px 28px 28px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.gm-age-logo{display:block;width:min(300px,82%);height:auto;margin:0 auto 20px}
+.gm-age-badge{display:inline-block;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:3px;font-size:13px;color:#08050d;background:#ffc93c;border-radius:999px;padding:5px 14px 4px;margin-bottom:16px}
+.gm-age-text{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:20px;line-height:1.45;color:#f7f3ea;font-weight:600;margin:0}
+.gm-age-sub{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:16px;line-height:1.45;color:#b9aed6;font-weight:500;margin:10px 0 0}
+.gm-age-check{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#1a1030;border:1px solid #3d1466;border-radius:10px;padding:15px 16px;margin:22px 0 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gm-age-check input[type=checkbox]{width:27px;height:27px;min-width:27px;margin:1px 0 0;accent-color:#ffc93c;cursor:pointer}
+.gm-age-check-label{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:18px;font-weight:600;color:#f7f3ea;line-height:1.3;padding-top:3px}
+.gm-age-enter{display:block;width:100%;min-height:54px;border:0;border-radius:10px;background:#ffc93c;color:#08050d;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-weight:700;font-size:20px;letter-spacing:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gm-age-enter:disabled{background:#3d1466;color:#8f83ad;cursor:not-allowed}
+.gm-age-enter:not(:disabled):hover{background:#e6a800}
+.gm-age-mistake{margin:16px 0 0;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:500;color:#9d92bd;line-height:1.4}
+@media (max-width:480px){.gm-age-panel{padding:28px 20px 22px}.gm-age-text{font-size:19px}}
+</style>
+<script>
+/* 18+ gate lock: runs in the document head, before the page paints. */
+(function(){try{if(!localStorage.getItem('gm_age_confirmed')){document.documentElement.classList.add('gm-age-locked');}}catch(e){document.documentElement.classList.add('gm-age-locked');}})();
+</script>
+</head>
+</head>
+<body>
+<!-- ==== 18+ ENTRY GATE (shared across all pages) ==== -->
+<div class="gm-age-gate" id="gmAgeGate" role="dialog" aria-modal="true" aria-labelledby="gmAgeText">
+  <div class="gm-age-panel">
+    <img class="gm-age-logo" src="goetz-money-wordmark.png" alt="Goetz Money">
+    <div class="gm-age-badge">18+ ONLY</div>
+    <p class="gm-age-text" id="gmAgeText">This site &mdash; and the streams behind it &mdash; run on adult language and grown-up content.</p>
+    <p class="gm-age-sub">Checking the box is the whole door policy. It stays checked on this device.</p>
+    <label class="gm-age-check" for="gmAgeCheck">
+      <input type="checkbox" id="gmAgeCheck">
+      <span class="gm-age-check-label">I am 18 years of age or older</span>
+    </label>
+    <button class="gm-age-enter" id="gmAgeEnter" type="button" disabled>ENTER</button>
+    <p class="gm-age-mistake">Landed here by mistake? No hard feelings &mdash; just head back the way you came.</p>
+  </div>
+</div>
+<script>
+/* 18+ gate wiring: ENTER stays disabled until the box is checked. Confirming
+   stores gm_age_confirmed in localStorage, so it's once per browser/device. */
+(function(){
+  var gate=document.getElementById('gmAgeGate');
+  if(!gate){return;}
+  if(!document.documentElement.classList.contains('gm-age-locked')){
+    if(gate.parentNode){gate.parentNode.removeChild(gate);}
+    return;
+  }
+  var box=document.getElementById('gmAgeCheck');
+  var btn=document.getElementById('gmAgeEnter');
+  box.addEventListener('change',function(){btn.disabled=!box.checked;});
+  btn.addEventListener('click',function(){
+    if(!box.checked){return;}
+    try{localStorage.setItem('gm_age_confirmed','1');}catch(e){}
+    document.documentElement.classList.remove('gm-age-locked');
+    if(gate.parentNode){gate.parentNode.removeChild(gate);}
+  });
+})();
+</script>
+<nav class="gm-nav" aria-label="Site sections">
+  <div class="gm-nav-inner">
+    <a class="gm-nav-brand" href="index.html" aria-label="Goetz Money — home">
+      <img src="coin-badge.png" alt="">
+      <span>Goetz<b>Money</b></span>
+    </a>
+    <div class="gm-nav-links" id="gm-nav-links">
+      <a href="index.html">Home</a>
+      <a href="gaming.html">Gaming</a>
+      <a href="basketball.html">Basketball</a>
+      <a href="tabletop.html">Tabletop Gaming</a>
+      <a href="glitchlings.html" class="active">Glitchlings</a>
+      <a class="gm-nav-live" href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch Live</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="binder-head">
+    <h1 class="display">The Binder</h1>
+    <p class="sub">Every Glitchling a viewer has caught on stream — type <span class="mono">!binder</span> in chat for your page.</p>
+  </div>
+  <div id="app"><p class="empty">Opening the binder…</p></div>
+  <p class="foot">Full Series 1 index on the <a href="glitchlings.html">Glitchlings page</a> · Data refreshes after shows.</p>
+</main>
+<script src="glitchlings-data.js"></script>
+<script>
+(function () {
+  var app = document.getElementById('app');
+  var byId = {};
+  (window.GLITCHLINGS || []).forEach(function (g) { byId[g.id] = g; });
+  var total = (window.GLITCHLINGS || []).length;
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  fetch('binder-data.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var users = data.users || {};
+      var u = new URLSearchParams(location.search).get('u');
+      if (u) { renderUser(users, u.toLowerCase()); } else { renderIndex(users); }
+    })
+    .catch(function () { app.innerHTML = '<p class="empty">The binder would not open. Try again in a bit.</p>'; });
+
+  function stats(rec) {
+    var c = (rec && rec.creatures) || {};
+    var species = Object.keys(c).length;
+    var catches = 0, shiny = 0;
+    Object.values(c).forEach(function (e) { catches += e.count || 0; shiny += e.shiny || 0; });
+    return { species: species, catches: catches, shiny: shiny };
+  }
+
+  function renderIndex(users) {
+    var names = Object.keys(users).sort(function (a, b) { return stats(users[b]).species - stats(users[a]).species; });
+    if (!names.length) { app.innerHTML = '<p class="empty">No catches yet. The first binder opens on the next stream.</p>'; return; }
+    var html = '<div class="collectors">';
+    names.forEach(function (n) {
+      var s = stats(users[n]);
+      html += '<a class="collector" href="binder.html?u=' + encodeURIComponent(n) + '"><span class="who">@' + esc(n) + '</span><span class="stat">' + s.species + ' / ' + total + ' species · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</span></a>';
+    });
+    app.innerHTML = html + '</div>';
+  }
+
+  function renderUser(users, u) {
+    var rec = users[u];
+    if (!rec || !rec.creatures || !Object.keys(rec.creatures).length) {
+      app.innerHTML = '<p class="binder-user">@' + esc(u) + '</p><p class="empty">No catches yet — when a Glitchling appears on stream, type <span class="mono">!save</span> to throw a Save Disk at it.</p>';
+      return;
+    }
+    var s = stats(rec);
+    var ids = Object.keys(rec.creatures).sort(function (a, b) {
+      var ga = byId[a], gb = byId[b];
+      var order = { Rare: 0, Uncommon: 1, Common: 2 };
+      return (order[ga ? ga.tier : 'Common'] - order[gb ? gb.tier : 'Common']) || a.localeCompare(b);
+    });
+    var html = '<p class="binder-user">@<b>' + esc(u) + '</b></p>';
+    html += '<div class="progress"><div style="width:' + Math.round(100 * s.species / total) + '%"></div></div>';
+    html += '<p class="progress-label">' + s.species + ' of ' + total + ' species catalogued · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</p>';
+    html += '<div class="grid">';
+    ids.forEach(function (id) {
+      var g = byId[id] || { name: id, type: '?', tier: '?', art: 'assets/glitchlings/' + id + '.png' };
+      var e = rec.creatures[id];
+      var badges = [];
+      if (e.count > 1) badges.push('×' + e.count);
+      if (e.shiny) badges.push('✦ ' + e.shiny + ' shiny');
+      if (e.hands) badges.push(e.hands + ' trade' + (e.hands > 1 ? 's' : ''));
+      html += '<div class="card"><img src="' + esc(g.art) + '" alt="' + esc(g.name) + '"><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="badges">' + badges.join(' · ') + '</div></div>';
+    });
+    app.innerHTML = html + '</div>';
+  }
+})();
+</script>
+
+</body>
+</html>
