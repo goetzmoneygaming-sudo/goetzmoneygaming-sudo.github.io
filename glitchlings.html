@@ -660,6 +660,10 @@
     .wiki-sidebar { max-height: 220px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding-right: 0; padding-bottom: 14px; margin-bottom: 4px; }
   }
 
+
+  .gl-lb-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .gl-lb-cols { grid-template-columns: 1fr; } }
+  .gl-lb-cols h3 { font-family: Rajdhani, sans-serif; color: var(--gold); margin-bottom: 8px; font-size: 20px; }
   /* ============ prediction leaderboard ============ */
 
   .lb-row {
@@ -1232,6 +1236,25 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
       <div class="panel-shell">
         <div id="gl-lb"></div>
         <div class="gl-badges" id="gl-badges"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLLECTION LEADERBOARDS (ledger-fed) ============ -->
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The Collection</span>
+      <h2 class="section-title display">Collectors &amp; Traders</h2>
+      <p class="section-sub">Straight from the lab ledger — every catch and trade on stream counts. Type <span class="mono">!binder</span> in chat for your own page.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-shell">
+        <div class="gl-lb-cols">
+          <div><h3>Top Collectors</h3><div id="lb-collectors"></div></div>
+          <div><h3>Top Traders</h3><div id="lb-traders"></div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -2102,6 +2125,47 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
     });
   }
   loadLatestStrip();
+</script>
+
+<script>
+/* Collection leaderboards: rendered from binder-data.json (the ledger export).
+   Collectors rank by species catalogued, then catches. Traders rank by trade
+   hands (each Glitchling keeps a hands counter; a viewer's total is the sum). */
+(function () {
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function stats(rec) {
+    var c = (rec && rec.creatures) || {};
+    var species = Object.keys(c).length, catches = 0, shiny = 0, hands = 0;
+    Object.values(c).forEach(function (e) { catches += e.count || 0; shiny += e.shiny || 0; hands += e.hands || 0; });
+    return { species: species, catches: catches, shiny: shiny, hands: hands };
+  }
+  function table(el, rows, cols) {
+    var box = document.getElementById(el);
+    if (!box) return;
+    if (!rows.length) { box.innerHTML = '<p class="gl-empty">No entries yet — the first catch opens the board.</p>'; return; }
+    var html = '<table class="gl-table"><thead><tr>' + cols.map(function (c) { return '<th>' + c[0] + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      html += '<tr>' + cols.map(function (c, i) { return '<td' + (i ? ' class="num"' : '') + '>' + r[i] + '</td>'; }).join('') + '</tr>';
+    });
+    box.innerHTML = html + '</tbody></table>';
+  }
+  fetch('binder-data.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (data) {
+    var users = data.users || {};
+    var names = Object.keys(users);
+    var col = names.map(function (n) { var s = stats(users[n]); return { n: n, s: s }; })
+      .sort(function (a, b) { return (b.s.species - a.s.species) || (b.s.catches - a.s.catches); })
+      .map(function (r) { return ['@' + esc(r.n), r.s.species + ' / 25', r.s.catches, r.s.shiny]; });
+    table('lb-collectors', col, [['Viewer',], ['Species',], ['Caught',], ['Shiny',]]);
+    var tr = names.map(function (n) { var s = stats(users[n]); return { n: n, s: s }; })
+      .filter(function (r) { return r.s.hands > 0; })
+      .sort(function (a, b) { return b.s.hands - a.s.hands; })
+      .map(function (r) { return ['@' + esc(r.n), r.s.hands]; });
+    table('lb-traders', tr, [['Viewer',], ['Trade hands',]]);
+  }).catch(function () {
+    table('lb-collectors', [], []);
+    table('lb-traders', [], []);
+  });
+})();
 </script>
 </body>
 </html>
