@@ -309,7 +309,7 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
       var s = stats(users[n]);
       html += '<a class="collector" href="binder.html?u=' + encodeURIComponent(n) + '"><span class="who">@' + esc(n) + '</span><span class="stat">' + s.species + ' / ' + total + ' species · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</span></a>';
     });
-    app.innerHTML = html + '</div>';
+    app.innerHTML = html + '</div><p class="foot"><a href="dex.html">Open the Dex &rarr;</a></p>';
   }
 
   function renderUser(users, u) {
@@ -337,7 +337,7 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
       if (e.hands) badges.push(e.hands + ' trade' + (e.hands > 1 ? 's' : ''));
       html += '<div class="pocket"><div class="card"><img src="' + esc(g.art) + '" alt="' + esc(g.name) + '"><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="badges">' + badges.join(' · ') + '</div></div></div>';
     });
-    app.innerHTML = html + '</div></div>';
+    app.innerHTML = html + '</div></div><p class="foot"><a href="dex.html?u=' + encodeURIComponent(u) + '">Open the Dex &rarr;</a></p>';
   }
 })();
 </script>
