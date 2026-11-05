@@ -14,6 +14,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
 <style>
+<style>
 
   :root {
     --ink:      #08050d;
@@ -69,75 +70,189 @@
   .progress { max-width: 520px; margin: 14px auto 6px; background: var(--panel-2); border: 1px solid var(--purple); border-radius: 999px; height: 16px; overflow: hidden; }
   .progress > div { height: 100%; background: linear-gradient(90deg, var(--purple-2), var(--gold)); }
   .progress-label { text-align: center; color: #cbbfe8; font-size: 14px; margin-bottom: 22px; }
-  /* ============ the binder page: a sheet of sleeve pockets ============ */
-  .binder-page {
-    position: relative;
-    margin: 4px 0 36px;
-    padding: 26px 26px 26px 60px;
-    background: radial-gradient(130% 100% at 50% 0%, #1e1039 0%, #130826 55%, #0b0517 100%);
-    border: 1px solid var(--purple);
-    border-radius: 18px;
-    box-shadow: 0 26px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-  /* spine strip down the left edge, with binder rings punched through it */
-  .binder-page::before {
-    content: "";
-    position: absolute; top: 0; bottom: 0; left: 0; width: 40px;
-    border-right: 1px solid rgba(255,201,60,0.20);
-    border-radius: 18px 0 0 18px;
-    background-image: radial-gradient(circle at 50% 50%, #05030a 0 5px, #9d92bd 6px, #3d1466 8px, rgba(61,20,102,0) 10px);
-    background-size: 40px 124px;
-    background-repeat: repeat-y;
-    background-position: 0 26px;
-  }
-  .pocket-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  @media (max-width: 860px) { .pocket-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 540px) {
-    .pocket-grid { grid-template-columns: 1fr; }
-    .binder-page { padding: 20px 16px 20px 52px; }
-  }
-  /* one clear sleeve pocket */
-  .pocket {
-    position: relative;
-    border-radius: 14px;
-    padding: 9px;
-    background: linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 38%, rgba(0,0,0,0.28) 100%);
-    border: 1px solid rgba(247,243,234,0.16);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 6px 18px rgba(0,0,0,0.35);
-  }
-  /* the plastic sheen across the sleeve */
-  .pocket::before {
-    content: "";
-    position: absolute; inset: 0; z-index: 2;
-    border-radius: 14px;
-    background: linear-gradient(115deg, transparent 28%, rgba(255,255,255,0.10) 44%, rgba(255,255,255,0.02) 56%, transparent 72%);
-    pointer-events: none;
-  }
-  /* stitched inner edge of the sleeve */
-  .pocket::after {
-    content: "";
-    position: absolute; inset: 5px; z-index: 3;
-    border: 1px dashed rgba(255,201,60,0.35);
-    border-radius: 10px;
-    pointer-events: none;
-  }
-  .pocket .card {
-    position: relative; z-index: 1; height: 100%;
-    background: var(--panel); border: 1px solid var(--purple); border-radius: 9px;
-    padding: 10px; text-align: center;
-  }
-  .pocket .card img { width: 100%; border-radius: 6px; display: block; }
-  .pocket .card .nm { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; margin-top: 9px; }
-  .pocket .card .meta { font-size: 12.5px; color: #cbbfe8; letter-spacing: .04em; text-transform: uppercase; }
-  .pocket .card .badges { margin-top: 6px; font-size: 13.5px; color: var(--gold); min-height: 18px; }
-  .empty { text-align: center; color: #cbbfe8; padding: 34px 0 46px; font-size: 17px; }
-  .collectors { max-width: 640px; margin: 0 auto; padding-bottom: 40px; }
-  .collector { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border: 1px solid var(--purple); border-radius: 10px; padding: 13px 18px; margin-bottom: 10px; text-decoration: none; }
-  .collector:hover { border-color: var(--gold); }
-  .collector .who { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; }
-  .collector .stat { color: #cbbfe8; font-size: 14px; }
+
+  /* ============ the Dex: a handheld tech device ============ */
+  .binder-head { padding: 52px 0 4px; }
   .foot { text-align: center; color: #9d92bd; font-size: 13.5px; padding: 8px 0 38px; }
   .foot a { color: var(--gold); }
+
+  .device {
+    max-width: 560px; margin: 10px auto 34px;
+    padding: 20px 18px 22px;
+    border-radius: 34px;
+    background: linear-gradient(165deg, #4a1d80 0%, #2a1150 45%, #1c0b38 100%);
+    border: 2px solid rgba(255,201,60,0.55);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.14), inset 0 -6px 14px rgba(0,0,0,0.45);
+  }
+  @media (max-width: 480px) { .device { padding: 16px 12px 18px; border-radius: 28px; } }
+
+  /* top strip: power LED, device name, vent lines */
+  .device-top { display: flex; align-items: center; gap: 10px; padding: 0 8px 13px; }
+  .led {
+    width: 11px; height: 11px; border-radius: 50%; flex: 0 0 auto;
+    background: #5cff9d; box-shadow: 0 0 9px #5cff9d, 0 0 2px #5cff9d;
+    animation: led-pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes led-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .device-name {
+    flex: 1; text-align: center; text-indent: 0.34em;
+    font-size: 26px; letter-spacing: 0.34em; color: var(--gold);
+    text-shadow: 0 2px 0 rgba(0,0,0,0.5);
+  }
+  .device-vents { flex: 0 0 auto; width: 34px; }
+  .device-vents i {
+    display: block; height: 3px; border-radius: 2px; margin: 3px 0;
+    background: rgba(0,0,0,0.45); box-shadow: inset 0 1px 1px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  /* recessed bezel + screen */
+  .bezel {
+    background: linear-gradient(180deg, #0a0616, #120a24);
+    border: 1px solid rgba(0,0,0,0.8); border-radius: 20px; padding: 12px;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .screen {
+    position: relative; border-radius: 10px; overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 0%, #0c2b26 0%, #071a18 55%, #04100f 100%);
+    box-shadow: inset 0 0 42px rgba(0,0,0,0.75), inset 0 0 6px rgba(0,0,0,0.9);
+    padding: 14px 12px 16px;
+  }
+  .screen-fx {
+    position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px),
+      linear-gradient(115deg, transparent 30%, rgba(190,255,235,0.05) 45%, transparent 60%);
+  }
+  .screen .empty { text-align: center; color: #a9e6cf; padding: 30px 6px 34px; font-size: 16px; }
+  .screen-scroll { max-height: 452px; overflow-y: auto; padding-right: 2px; scrollbar-width: thin; scrollbar-color: rgba(255,201,60,0.5) rgba(0,0,0,0.3); }
+  .screen-scroll::-webkit-scrollbar { width: 8px; }
+  .screen-scroll::-webkit-scrollbar-thumb { background: rgba(255,201,60,0.45); border-radius: 4px; }
+  .screen-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
+
+  /* screen readout (per-viewer header stats) */
+  .readout {
+    border: 1px solid rgba(120,255,205,0.22); background: rgba(0,0,0,0.28);
+    border-radius: 8px; padding: 9px 12px 10px; margin-bottom: 10px;
+  }
+  .readout .who { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; color: #eafff6; }
+  .readout .who b { color: var(--gold); }
+  .readout .bar { height: 10px; margin: 7px 0 6px; background: rgba(255,255,255,0.08); border: 1px solid rgba(120,255,205,0.25); border-radius: 999px; overflow: hidden; }
+  .readout .bar > div { height: 100%; background: linear-gradient(90deg, #37e0a0, var(--gold)); }
+  .readout .lbl { font-size: 12.5px; color: #a9e6cf; letter-spacing: 0.03em; }
+
+  .screen .crosslink { text-align: center; margin: 2px 0 10px; font-size: 14.5px; }
+  .screen .crosslink a {
+    color: var(--gold); text-decoration: none;
+    font-family: Rajdhani, sans-serif; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .screen .crosslink a:hover { color: var(--gold-2); }
+
+  /* collectors index, on-screen */
+  .screen .collector {
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.30); border: 1px solid rgba(120,255,205,0.22);
+    border-radius: 9px; padding: 11px 14px; margin-bottom: 8px;
+    text-decoration: none; color: #eafff6;
+  }
+  .screen .collector:hover { border-color: var(--gold); }
+  .screen .collector .who { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 17px; }
+  .screen .collector .stat { color: #a9e6cf; font-size: 13px; }
+
+  /* species cells on the screen: 8-bit sprites with an idle bob */
+  .dex-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 480px) { .dex-grid { grid-template-columns: repeat(3, 1fr); } }
+  .cell {
+    background: linear-gradient(180deg, rgba(140,255,215,0.06), rgba(0,0,0,0.25));
+    border: 1px solid rgba(120,255,205,0.16); border-radius: 10px;
+    padding: 8px 4px 7px; text-align: center;
+  }
+  .cell-art {
+    height: 76px; display: flex; align-items: flex-end; justify-content: center;
+    background: radial-gradient(60% 55% at 50% 62%, rgba(120,255,205,0.10), transparent 70%);
+  }
+  .cell img.sprite {
+    width: 72px; height: 72px; max-width: 100%; object-fit: contain; display: block;
+    image-rendering: pixelated; image-rendering: crisp-edges;
+  }
+  @keyframes idle-bob {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+    100% { transform: translateY(0); }
+  }
+  .cell img.sprite.idle { animation: idle-bob 0.9s steps(2, end) infinite; }
+  .cell .nm { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 15.5px; line-height: 1.05; color: #eafff6; margin-top: 2px; }
+  .cell .meta { font-size: 10.5px; color: #8fd8c0; letter-spacing: 0.05em; text-transform: uppercase; }
+  .cell .cnt { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--gold); min-height: 15px; }
+  .cell.uncaught img.sprite { filter: brightness(0); opacity: 0.8; }
+  .cell.uncaught .nm { color: #5f7a70; letter-spacing: 0.18em; }
+  .cell.uncaught .meta { color: #47655a; }
+
+  /* badge case: a shallow tray built into the device body */
+  .badge-case {
+    margin-top: 16px; padding: 10px 12px 12px;
+    background: linear-gradient(180deg, #170b31, #100722);
+    border: 1px solid rgba(255,201,60,0.35); border-radius: 16px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.7);
+  }
+  .badge-case-head { font-size: 13px; letter-spacing: 0.22em; text-indent: 0.22em; color: var(--gold); text-align: center; margin-bottom: 8px; }
+  .badge-tray { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .slot {
+    min-height: 44px; border-radius: 10px; padding: 4px;
+    border: 1px dashed rgba(255,201,60,0.28); background: rgba(0,0,0,0.35);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.65);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+  .slot.filled {
+    border: 1px solid var(--gold);
+    background: radial-gradient(90% 120% at 50% 0%, rgba(255,201,60,0.22), rgba(255,201,60,0.05));
+  }
+  .slot .badge-chip {
+    font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 12.5px;
+    line-height: 1.1; letter-spacing: 0.03em; color: var(--gold);
+  }
+
+  /* controls furniture: d-pad, select/start pills, buttons, speaker grille */
+  .device-controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 0 8px; }
+  .dpad { position: relative; width: 74px; height: 74px; flex: 0 0 auto; }
+  .dpad-v, .dpad-h {
+    position: absolute; border-radius: 6px;
+    background: linear-gradient(180deg, #2a1650, #1a0d33);
+    border: 1px solid rgba(255,201,60,0.35); box-shadow: 0 3px 0 rgba(0,0,0,0.45);
+  }
+  .dpad-v { left: 50%; top: 0; width: 24px; height: 74px; transform: translateX(-50%); }
+  .dpad-h { top: 50%; left: 0; height: 24px; width: 74px; transform: translateY(-50%); }
+  .dpad-c {
+    position: absolute; left: 50%; top: 50%; width: 14px; height: 14px;
+    transform: translate(-50%, -50%); border-radius: 50%;
+    background: #12082a; box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+  }
+  .device-pills { display: flex; gap: 12px; }
+  .device-pills .pill {
+    width: 36px; height: 11px; border-radius: 999px; transform: rotate(-18deg);
+    background: linear-gradient(180deg, #2a1650, #1a0d33);
+    border: 1px solid rgba(255,201,60,0.35); box-shadow: 0 2px 0 rgba(0,0,0,0.45);
+  }
+  .btn-cluster { display: flex; gap: 12px; transform: rotate(-18deg); }
+  .btn-cluster .btn { width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto; }
+  .btn-cluster .btn-a {
+    background: radial-gradient(circle at 32% 28%, #ffe27a, var(--gold) 55%, var(--gold-2));
+    box-shadow: 0 4px 0 #8a6100, 0 6px 10px rgba(0,0,0,0.4);
+  }
+  .btn-cluster .btn-b {
+    background: radial-gradient(circle at 32% 28%, #b07fe8, var(--purple-2) 55%, var(--purple));
+    box-shadow: 0 4px 0 #2a0f4d, 0 6px 10px rgba(0,0,0,0.4);
+  }
+  .device-bottom { display: flex; justify-content: flex-end; padding: 12px 10px 0; }
+  .speaker {
+    width: 86px; height: 33px; border-radius: 6px; transform: rotate(-18deg);
+    background-image: radial-gradient(circle, rgba(0,0,0,0.55) 2.2px, rgba(255,255,255,0.06) 2.9px, transparent 3.5px);
+    background-size: 11px 11px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cell img.sprite.idle { animation: none; }
+    .led { animation: none; }
+  }
 
   /* ============ top tab nav (sticky) — to add a future page tab, add one <a> line in .gm-nav-links ============ */
   .gm-nav {
@@ -190,24 +305,6 @@
     .gm-nav-links a { min-height: 48px; font-size: 15px; padding: 4px 10px; }
     section[id] { scroll-margin-top: 64px; }
   }
-  /* ============ the Dex: silhouettes, badge row, cross-links ============ */
-  .pocket.uncaught .card img { filter: brightness(0); }
-  .pocket.uncaught .card .nm { color: #9d92bd; letter-spacing: 0.18em; }
-  .pocket.uncaught .card .meta { color: #6f6390; }
-  .badges-row { text-align: center; margin: 2px 0 10px; }
-  .badge-chip {
-    display: inline-block; margin: 3px 4px; padding: 4px 13px;
-    border: 1px solid var(--gold); border-radius: 999px;
-    color: var(--gold); background: rgba(255,201,60,0.08);
-    font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 14.5px; letter-spacing: 0.04em;
-  }
-  .crosslink { text-align: center; margin: 10px 0 16px; font-size: 15.5px; }
-  .crosslink a {
-    color: var(--gold); text-decoration: none;
-    font-family: Rajdhani, sans-serif; font-weight: 700;
-    letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .crosslink a:hover { color: var(--gold-2); }
 /* ==== 18+ ENTRY GATE (shared across all pages) ==== */
 .gm-age-gate{position:fixed;inset:0;z-index:2147483000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;background:#08050d;background:radial-gradient(120% 120% at 50% 0%,#1a1030 0%,#0d0716 55%,#08050d 100%)}
 html.gm-age-locked .gm-age-gate{display:flex}
@@ -284,18 +381,60 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
     </div>
   </div>
 </nav>
-
 <main class="wrap">
   <div class="binder-head">
-    <h1 class="display">The Dex</h1>
-    <p class="sub">Every Glitchling species in Series 1 — the ones a viewer has registered in full color, the rest still hiding in the static. Type <span class="mono">!save</span> in chat when one appears.</p>
+    <h1 class="display">The <span class="js-device-name">DEX</span></h1>
+    <p class="sub">Every Glitchling species in Series 1 &mdash; the ones a viewer has registered in full color, the rest still hiding in the static. Type <span class="mono">!save</span> in chat when one appears.</p>
   </div>
-  <div id="app"><p class="empty">Opening the Dex…</p></div>
-  <p class="foot">Your cards live in <a href="binder.html">The Binder</a> · Data refreshes after shows.</p>
+
+  <div class="device">
+    <div class="device-top">
+      <span class="led" aria-hidden="true"></span>
+      <span class="device-name display js-device-name">DEX</span>
+      <span class="device-vents" aria-hidden="true"><i></i><i></i><i></i></span>
+    </div>
+    <div class="bezel">
+      <div class="screen">
+        <div id="app"><p class="empty">Opening the Dex&hellip;</p></div>
+        <div class="screen-fx" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="badge-case">
+      <div class="badge-case-head display">Badge Case</div>
+      <div class="badge-tray" id="badgeTray">
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+          <div class="slot"></div>
+      </div>
+    </div>
+    <div class="device-controls" aria-hidden="true">
+      <div class="dpad"><span class="dpad-v"></span><span class="dpad-h"></span><span class="dpad-c"></span></div>
+      <div class="device-pills"><span class="pill"></span><span class="pill"></span></div>
+      <div class="btn-cluster"><span class="btn btn-b"></span><span class="btn btn-a"></span></div>
+    </div>
+    <div class="device-bottom" aria-hidden="true">
+      <div class="speaker"></div>
+    </div>
+  </div>
+
+  <p class="foot">Your cards live in <a href="binder.html">The Binder</a> &middot; Data refreshes after shows.</p>
 </main>
 <script src="glitchlings-data.js"></script>
 <script>
 (function () {
+  var DEVICE_NAME = "DEX";
+
+  /* the device's name comes from DEVICE_NAME alone: document title,
+     the page heading, and the device's own header strip */
+  document.title = 'The ' + DEVICE_NAME + ' \u2014 GoetzMoney';
+  var nameEls = document.querySelectorAll('.js-device-name');
+  for (var i = 0; i < nameEls.length; i++) { nameEls[i].textContent = DEVICE_NAME; }
+
   var app = document.getElementById('app');
   var byId = {};
   var catalog = (typeof GLITCHLINGS !== "undefined" && GLITCHLINGS) || [];
@@ -323,18 +462,39 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
     return { registered: registered, catches: catches, shiny: shiny };
   }
 
-  /* Battle badges: renders ONLY when the user's record carries badge data —
-     a non-empty badges array and/or a numeric wins count. No data, no row. */
-  function badgeRow(rec) {
-    var parts = [];
+  /* Battle badges: items exist ONLY when the user's record carries badge
+     data — a non-empty badges array and/or a numeric wins count. */
+  function badgeItems(rec) {
+    var items = [];
     if (rec && Array.isArray(rec.badges)) {
-      rec.badges.forEach(function (b) { if (b) parts.push('<span class="badge-chip">' + esc(b) + '</span>'); });
+      rec.badges.forEach(function (b) { if (b) items.push(String(b)); });
     }
     if (rec && typeof rec.wins === 'number') {
-      parts.push('<span class="badge-chip">' + rec.wins + (rec.wins === 1 ? ' win' : ' wins') + '</span>');
+      items.push(rec.wins + (rec.wins === 1 ? ' win' : ' wins'));
     }
-    if (!parts.length) return '';
-    return '<div class="badges-row">' + parts.join('') + '</div>';
+    return items;
+  }
+
+  /* Earned badges fill the device badge-case slots as gold chips.
+     No badge data: the tray stays an empty case — no fake badges. */
+  function fillBadgeCase(rec) {
+    var tray = document.getElementById('badgeTray');
+    if (!tray) return;
+    var items = badgeItems(rec);
+    if (!items.length) return;
+    var slots = tray.querySelectorAll('.slot');
+    items.forEach(function (label, idx) {
+      var slot;
+      if (idx < slots.length) {
+        slot = slots[idx];
+      } else {
+        slot = document.createElement('div');
+        slot.className = 'slot';
+        tray.appendChild(slot);
+      }
+      slot.classList.add('filled');
+      slot.innerHTML = '<span class="badge-chip">' + esc(label) + '</span>';
+    });
   }
 
   function renderIndex(users) {
@@ -343,7 +503,7 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
       return (sb.registered - sa.registered) || (sb.catches - sa.catches);
     });
     if (!names.length) { app.innerHTML = '<p class="empty">No catches yet. The Dex opens on the next stream.</p>'; return; }
-    var html = '<p class="crosslink"><a href="binder.html">&larr; Back to the binder</a></p><div class="collectors">';
+    var html = '<p class="crosslink"><a href="binder.html">&larr; Back to the binder</a></p><div class="screen-scroll">';
     names.forEach(function (n) {
       var s = dexStats(users[n]);
       html += '<a class="collector" href="dex.html?u=' + encodeURIComponent(n) + '"><span class="who">@' + esc(n) + '</span><span class="stat">' + s.registered + ' / ' + total + ' registered · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</span></a>';
@@ -354,23 +514,25 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
   function renderUser(users, u) {
     var rec = users[u];
     var s = dexStats(rec);
-    var html = '<p class="binder-user">@<b>' + esc(u) + '</b></p>';
-    html += '<div class="progress"><div style="width:' + Math.round(total ? 100 * s.registered / total : 0) + '%"></div></div>';
-    html += '<p class="progress-label">' + s.registered + ' of ' + total + ' species registered · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</p>';
-    html += badgeRow(rec);
+    var html = '<div class="readout"><div class="who">@<b>' + esc(u) + '</b></div>';
+    html += '<div class="bar"><div style="width:' + Math.round(total ? 100 * s.registered / total : 0) + '%"></div></div>';
+    html += '<div class="lbl">' + s.registered + ' of ' + total + ' species registered · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</div></div>';
     html += '<p class="crosslink"><a href="binder.html?u=' + encodeURIComponent(u) + '">&larr; Back to the binder</a></p>';
-    html += '<div class="binder-page"><div class="pocket-grid">';
-    catalog.forEach(function (g) {
+    html += '<div class="screen-scroll"><div class="dex-grid">';
+    catalog.forEach(function (g, idx) {
       var e = rec.creatures && rec.creatures[g.id];
+      var sprite = 'assets/dex-sprites/' + g.id + '.png';
       if (e) {
-        var badges = ['×' + (e.count || 0)];
-        if (e.shiny) badges.push('✦ ' + e.shiny + ' shiny');
-        html += '<div class="pocket"><div class="card"><img src="' + esc(g.art) + '" alt="' + esc(g.name) + '"><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="badges">' + badges.join(' · ') + '</div></div></div>';
+        var lines = ['×' + (e.count || 0)];
+        if (e.shiny) lines.push('✦ ' + e.shiny + ' shiny');
+        var delay = -(((idx * 137) % 900) / 1000);
+        html += '<div class="cell"><div class="cell-art"><img class="sprite idle" style="animation-delay:' + delay + 's" src="' + esc(sprite) + '" alt="' + esc(g.name) + '"></div><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="cnt">' + lines.join(' · ') + '</div></div>';
       } else {
-        html += '<div class="pocket uncaught"><div class="card"><img src="' + esc(g.art) + '" alt="Unregistered Glitchling"><div class="nm">???</div><div class="meta">Not registered</div><div class="badges"></div></div></div>';
+        html += '<div class="cell uncaught"><div class="cell-art"><img class="sprite" src="' + esc(sprite) + '" alt="Unregistered Glitchling"></div><div class="nm">???</div><div class="meta">Not registered</div><div class="cnt"></div></div>';
       }
     });
     app.innerHTML = html + '</div></div>';
+    fillBadgeCase(rec);
   }
 })();
 </script>
