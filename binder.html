@@ -7,13 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&family=Bangers&display=swap" rel="stylesheet">
-<style>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&family=Bangers&display=swap" rel="stylesheet">
 <style>
 
   :root {
@@ -58,6 +57,9 @@
     background-image:
       linear-gradient(rgba(255,201,60,0.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,201,60,0.06) 1px, transparent 1px);
+    background-size: 46px 46px;
+    pointer-events: none;
+  }
 
   .binder-head { padding: 120px 0 8px; text-align: center; }
   .binder-head h1 { font-size: clamp(38px, 6vw, 64px); color: var(--gold); }
@@ -67,12 +69,67 @@
   .progress { max-width: 520px; margin: 14px auto 6px; background: var(--panel-2); border: 1px solid var(--purple); border-radius: 999px; height: 16px; overflow: hidden; }
   .progress > div { height: 100%; background: linear-gradient(90deg, var(--purple-2), var(--gold)); }
   .progress-label { text-align: center; color: #cbbfe8; font-size: 14px; margin-bottom: 22px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 16px; padding-bottom: 30px; }
-  .card { background: var(--panel); border: 1px solid var(--purple); border-radius: 12px; padding: 12px; text-align: center; }
-  .card img { width: 100%; border-radius: 8px; display: block; }
-  .card .nm { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; margin-top: 9px; }
-  .card .meta { font-size: 12.5px; color: #cbbfe8; letter-spacing: .04em; text-transform: uppercase; }
-  .card .badges { margin-top: 6px; font-size: 13.5px; color: var(--gold); min-height: 18px; }
+  /* ============ the binder page: a sheet of sleeve pockets ============ */
+  .binder-page {
+    position: relative;
+    margin: 4px 0 36px;
+    padding: 26px 26px 26px 60px;
+    background: radial-gradient(130% 100% at 50% 0%, #1e1039 0%, #130826 55%, #0b0517 100%);
+    border: 1px solid var(--purple);
+    border-radius: 18px;
+    box-shadow: 0 26px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  /* spine strip down the left edge, with binder rings punched through it */
+  .binder-page::before {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: 0; width: 40px;
+    border-right: 1px solid rgba(255,201,60,0.20);
+    border-radius: 18px 0 0 18px;
+    background-image: radial-gradient(circle at 50% 50%, #05030a 0 5px, #9d92bd 6px, #3d1466 8px, rgba(61,20,102,0) 10px);
+    background-size: 40px 124px;
+    background-repeat: repeat-y;
+    background-position: 0 26px;
+  }
+  .pocket-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 860px) { .pocket-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) {
+    .pocket-grid { grid-template-columns: 1fr; }
+    .binder-page { padding: 20px 16px 20px 52px; }
+  }
+  /* one clear sleeve pocket */
+  .pocket {
+    position: relative;
+    border-radius: 14px;
+    padding: 9px;
+    background: linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 38%, rgba(0,0,0,0.28) 100%);
+    border: 1px solid rgba(247,243,234,0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 6px 18px rgba(0,0,0,0.35);
+  }
+  /* the plastic sheen across the sleeve */
+  .pocket::before {
+    content: "";
+    position: absolute; inset: 0; z-index: 2;
+    border-radius: 14px;
+    background: linear-gradient(115deg, transparent 28%, rgba(255,255,255,0.10) 44%, rgba(255,255,255,0.02) 56%, transparent 72%);
+    pointer-events: none;
+  }
+  /* stitched inner edge of the sleeve */
+  .pocket::after {
+    content: "";
+    position: absolute; inset: 5px; z-index: 3;
+    border: 1px dashed rgba(255,201,60,0.35);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+  .pocket .card {
+    position: relative; z-index: 1; height: 100%;
+    background: var(--panel); border: 1px solid var(--purple); border-radius: 9px;
+    padding: 10px; text-align: center;
+  }
+  .pocket .card img { width: 100%; border-radius: 6px; display: block; }
+  .pocket .card .nm { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; margin-top: 9px; }
+  .pocket .card .meta { font-size: 12.5px; color: #cbbfe8; letter-spacing: .04em; text-transform: uppercase; }
+  .pocket .card .badges { margin-top: 6px; font-size: 13.5px; color: var(--gold); min-height: 18px; }
   .empty { text-align: center; color: #cbbfe8; padding: 34px 0 46px; font-size: 17px; }
   .collectors { max-width: 640px; margin: 0 auto; padding-bottom: 40px; }
   .collector { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border: 1px solid var(--purple); border-radius: 10px; padding: 13px 18px; margin-bottom: 10px; text-decoration: none; }
@@ -156,7 +213,6 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
 (function(){try{if(!localStorage.getItem('gm_age_confirmed')){document.documentElement.classList.add('gm-age-locked');}}catch(e){document.documentElement.classList.add('gm-age-locked');}})();
 </script>
 </head>
-</head>
 <body>
 <!-- ==== 18+ ENTRY GATE (shared across all pages) ==== -->
 <div class="gm-age-gate" id="gmAgeGate" role="dialog" aria-modal="true" aria-labelledby="gmAgeText">
@@ -224,8 +280,9 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
 (function () {
   var app = document.getElementById('app');
   var byId = {};
-  (window.GLITCHLINGS || []).forEach(function (g) { byId[g.id] = g; });
-  var total = (window.GLITCHLINGS || []).length;
+  var catalog = (typeof GLITCHLINGS !== "undefined" && GLITCHLINGS) || [];
+  catalog.forEach(function (g) { byId[g.id] = g; });
+  var total = catalog.length;
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   fetch('binder-data.json', { cache: 'no-store' })
     .then(function (r) { return r.json(); })
@@ -268,9 +325,9 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
       return (order[ga ? ga.tier : 'Common'] - order[gb ? gb.tier : 'Common']) || a.localeCompare(b);
     });
     var html = '<p class="binder-user">@<b>' + esc(u) + '</b></p>';
-    html += '<div class="progress"><div style="width:' + Math.round(100 * s.species / total) + '%"></div></div>';
+    html += '<div class="progress"><div style="width:' + Math.round(total ? 100 * s.species / total : 0) + '%"></div></div>';
     html += '<p class="progress-label">' + s.species + ' of ' + total + ' species catalogued · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</p>';
-    html += '<div class="grid">';
+    html += '<div class="binder-page"><div class="pocket-grid">';
     ids.forEach(function (id) {
       var g = byId[id] || { name: id, type: '?', tier: '?', art: 'assets/glitchlings/' + id + '.png' };
       var e = rec.creatures[id];
@@ -278,9 +335,9 @@ html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
       if (e.count > 1) badges.push('×' + e.count);
       if (e.shiny) badges.push('✦ ' + e.shiny + ' shiny');
       if (e.hands) badges.push(e.hands + ' trade' + (e.hands > 1 ? 's' : ''));
-      html += '<div class="card"><img src="' + esc(g.art) + '" alt="' + esc(g.name) + '"><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="badges">' + badges.join(' · ') + '</div></div>';
+      html += '<div class="pocket"><div class="card"><img src="' + esc(g.art) + '" alt="' + esc(g.name) + '"><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="badges">' + badges.join(' · ') + '</div></div></div>';
     });
-    app.innerHTML = html + '</div>';
+    app.innerHTML = html + '</div></div>';
   }
 })();
 </script>
