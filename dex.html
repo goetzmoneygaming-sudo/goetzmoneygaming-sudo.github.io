@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Dex — GoetzMoney</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&family=Bangers&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+<style>
+
+  :root {
+    --ink:      #08050d;
+    --panel:    #120a1f;
+    --panel-2:  #1a1030;
+    --purple:   #3d1466;
+    --purple-2: #7b3fd4;
+    --gold:     #ffc93c;
+    --gold-2:   #e6a800;
+    --cream:    #f7f3ea;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: "Space Grotesk", sans-serif;
+    overflow-x: hidden;
+  }
+
+  .display  { font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+  .comic    { font-family: "Bangers", cursive; letter-spacing: 0.02em; }
+  .mono     { font-family: "JetBrains Mono", monospace; }
+
+  a { color: inherit; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+
+  /* ============ circuit texture (shared) ============ */
+
+  .circuit-bg {
+    position: relative;
+  }
+  .circuit-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,201,60,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,201,60,0.06) 1px, transparent 1px);
+    background-size: 46px 46px;
+    pointer-events: none;
+  }
+
+  .binder-head { padding: 120px 0 8px; text-align: center; }
+  .binder-head h1 { font-size: clamp(38px, 6vw, 64px); color: var(--gold); }
+  .binder-head .sub { color: #cbbfe8; margin-top: 6px; font-size: 17px; }
+  .binder-user { text-align: center; margin: 18px 0 4px; font-size: 20px; }
+  .binder-user b { color: var(--gold); }
+  .progress { max-width: 520px; margin: 14px auto 6px; background: var(--panel-2); border: 1px solid var(--purple); border-radius: 999px; height: 16px; overflow: hidden; }
+  .progress > div { height: 100%; background: linear-gradient(90deg, var(--purple-2), var(--gold)); }
+  .progress-label { text-align: center; color: #cbbfe8; font-size: 14px; margin-bottom: 22px; }
+  /* ============ the binder page: a sheet of sleeve pockets ============ */
+  .binder-page {
+    position: relative;
+    margin: 4px 0 36px;
+    padding: 26px 26px 26px 60px;
+    background: radial-gradient(130% 100% at 50% 0%, #1e1039 0%, #130826 55%, #0b0517 100%);
+    border: 1px solid var(--purple);
+    border-radius: 18px;
+    box-shadow: 0 26px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  /* spine strip down the left edge, with binder rings punched through it */
+  .binder-page::before {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: 0; width: 40px;
+    border-right: 1px solid rgba(255,201,60,0.20);
+    border-radius: 18px 0 0 18px;
+    background-image: radial-gradient(circle at 50% 50%, #05030a 0 5px, #9d92bd 6px, #3d1466 8px, rgba(61,20,102,0) 10px);
+    background-size: 40px 124px;
+    background-repeat: repeat-y;
+    background-position: 0 26px;
+  }
+  .pocket-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 860px) { .pocket-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) {
+    .pocket-grid { grid-template-columns: 1fr; }
+    .binder-page { padding: 20px 16px 20px 52px; }
+  }
+  /* one clear sleeve pocket */
+  .pocket {
+    position: relative;
+    border-radius: 14px;
+    padding: 9px;
+    background: linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 38%, rgba(0,0,0,0.28) 100%);
+    border: 1px solid rgba(247,243,234,0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 6px 18px rgba(0,0,0,0.35);
+  }
+  /* the plastic sheen across the sleeve */
+  .pocket::before {
+    content: "";
+    position: absolute; inset: 0; z-index: 2;
+    border-radius: 14px;
+    background: linear-gradient(115deg, transparent 28%, rgba(255,255,255,0.10) 44%, rgba(255,255,255,0.02) 56%, transparent 72%);
+    pointer-events: none;
+  }
+  /* stitched inner edge of the sleeve */
+  .pocket::after {
+    content: "";
+    position: absolute; inset: 5px; z-index: 3;
+    border: 1px dashed rgba(255,201,60,0.35);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+  .pocket .card {
+    position: relative; z-index: 1; height: 100%;
+    background: var(--panel); border: 1px solid var(--purple); border-radius: 9px;
+    padding: 10px; text-align: center;
+  }
+  .pocket .card img { width: 100%; border-radius: 6px; display: block; }
+  .pocket .card .nm { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; margin-top: 9px; }
+  .pocket .card .meta { font-size: 12.5px; color: #cbbfe8; letter-spacing: .04em; text-transform: uppercase; }
+  .pocket .card .badges { margin-top: 6px; font-size: 13.5px; color: var(--gold); min-height: 18px; }
+  .empty { text-align: center; color: #cbbfe8; padding: 34px 0 46px; font-size: 17px; }
+  .collectors { max-width: 640px; margin: 0 auto; padding-bottom: 40px; }
+  .collector { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border: 1px solid var(--purple); border-radius: 10px; padding: 13px 18px; margin-bottom: 10px; text-decoration: none; }
+  .collector:hover { border-color: var(--gold); }
+  .collector .who { font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 19px; }
+  .collector .stat { color: #cbbfe8; font-size: 14px; }
+  .foot { text-align: center; color: #9d92bd; font-size: 13.5px; padding: 8px 0 38px; }
+  .foot a { color: var(--gold); }
+
+  /* ============ top tab nav (sticky) — to add a future page tab, add one <a> line in .gm-nav-links ============ */
+  .gm-nav {
+    position: sticky; top: 0; z-index: 900;
+    background: linear-gradient(180deg, rgba(26,16,48,0.98), rgba(18,10,31,0.98));
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  }
+  .gm-nav-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 10px;
+    display: flex; align-items: stretch; gap: 4px;
+  }
+  .gm-nav-brand {
+    display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+    padding: 6px 10px 6px 4px; text-decoration: none;
+  }
+  .gm-nav-brand img { width: 36px; height: 36px; object-fit: contain; display: block; }
+  .gm-nav-brand span {
+    font-family: "Rajdhani", sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 19px; color: var(--cream); white-space: nowrap;
+  }
+  .gm-nav-brand span b { color: var(--gold); font-weight: 700; }
+  .gm-nav-links {
+    display: flex; align-items: stretch; gap: 2px; margin-left: auto;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .gm-nav-links::-webkit-scrollbar { display: none; }
+  .gm-nav-links a {
+    display: flex; align-items: center; min-height: 52px; padding: 4px 11px;
+    font-family: "Rajdhani", sans-serif; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 15.5px; color: rgba(247,243,234,0.82);
+    text-decoration: none; white-space: nowrap; position: relative;
+  }
+  .gm-nav-links a:hover { color: var(--gold); }
+  .gm-nav-links a.active { color: var(--gold); }
+  .gm-nav-links a.active::after {
+    content: ""; position: absolute; left: 9px; right: 9px; bottom: 5px;
+    height: 3px; border-radius: 2px; background: var(--gold);
+  }
+  .gm-nav-links a.gm-nav-live {
+    align-self: center; min-height: 44px; margin-left: 8px; padding: 4px 14px;
+    background: var(--purple-2); color: #fff; border-radius: 8px; font-weight: 700;
+  }
+  .gm-nav-links a.gm-nav-live:hover { background: var(--gold); color: var(--ink); }
+  .gm-nav-links a.gm-nav-live.active { color: #fff; }
+  .gm-nav-links a.gm-nav-live.active::after { display: none; }
+  section[id] { scroll-margin-top: 72px; }
+  @media (max-width: 760px) {
+    .gm-nav-brand span { display: none; }
+    .gm-nav-links a { min-height: 48px; font-size: 15px; padding: 4px 10px; }
+    section[id] { scroll-margin-top: 64px; }
+  }
+  /* ============ the Dex: silhouettes, badge row, cross-links ============ */
+  .pocket.uncaught .card img { filter: brightness(0); }
+  .pocket.uncaught .card .nm { color: #9d92bd; letter-spacing: 0.18em; }
+  .pocket.uncaught .card .meta { color: #6f6390; }
+  .badges-row { text-align: center; margin: 2px 0 10px; }
+  .badge-chip {
+    display: inline-block; margin: 3px 4px; padding: 4px 13px;
+    border: 1px solid var(--gold); border-radius: 999px;
+    color: var(--gold); background: rgba(255,201,60,0.08);
+    font-family: Rajdhani, sans-serif; font-weight: 700; font-size: 14.5px; letter-spacing: 0.04em;
+  }
+  .crosslink { text-align: center; margin: 10px 0 16px; font-size: 15.5px; }
+  .crosslink a {
+    color: var(--gold); text-decoration: none;
+    font-family: Rajdhani, sans-serif; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .crosslink a:hover { color: var(--gold-2); }
+/* ==== 18+ ENTRY GATE (shared across all pages) ==== */
+.gm-age-gate{position:fixed;inset:0;z-index:2147483000;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;background:#08050d;background:radial-gradient(120% 120% at 50% 0%,#1a1030 0%,#0d0716 55%,#08050d 100%)}
+html.gm-age-locked .gm-age-gate{display:flex}
+html.gm-age-locked,html.gm-age-locked body{overflow:hidden!important}
+.gm-age-panel{margin:auto;width:100%;max-width:430px;background:#120a1f;border:1px solid #3d1466;border-top:3px solid #ffc93c;border-radius:14px;padding:34px 28px 28px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.gm-age-logo{display:block;width:min(300px,82%);height:auto;margin:0 auto 20px}
+.gm-age-badge{display:inline-block;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:3px;font-size:13px;color:#08050d;background:#ffc93c;border-radius:999px;padding:5px 14px 4px;margin-bottom:16px}
+.gm-age-text{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:20px;line-height:1.45;color:#f7f3ea;font-weight:600;margin:0}
+.gm-age-sub{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:16px;line-height:1.45;color:#b9aed6;font-weight:500;margin:10px 0 0}
+.gm-age-check{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#1a1030;border:1px solid #3d1466;border-radius:10px;padding:15px 16px;margin:22px 0 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gm-age-check input[type=checkbox]{width:27px;height:27px;min-width:27px;margin:1px 0 0;accent-color:#ffc93c;cursor:pointer}
+.gm-age-check-label{font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:18px;font-weight:600;color:#f7f3ea;line-height:1.3;padding-top:3px}
+.gm-age-enter{display:block;width:100%;min-height:54px;border:0;border-radius:10px;background:#ffc93c;color:#08050d;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-weight:700;font-size:20px;letter-spacing:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gm-age-enter:disabled{background:#3d1466;color:#8f83ad;cursor:not-allowed}
+.gm-age-enter:not(:disabled):hover{background:#e6a800}
+.gm-age-mistake{margin:16px 0 0;font-family:Rajdhani,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:500;color:#9d92bd;line-height:1.4}
+@media (max-width:480px){.gm-age-panel{padding:28px 20px 22px}.gm-age-text{font-size:19px}}
+</style>
+<script>
+/* 18+ gate lock: runs in the document head, before the page paints. */
+(function(){try{if(!localStorage.getItem('gm_age_confirmed')){document.documentElement.classList.add('gm-age-locked');}}catch(e){document.documentElement.classList.add('gm-age-locked');}})();
+</script>
+</head>
+<body>
+<!-- ==== 18+ ENTRY GATE (shared across all pages) ==== -->
+<div class="gm-age-gate" id="gmAgeGate" role="dialog" aria-modal="true" aria-labelledby="gmAgeText">
+  <div class="gm-age-panel">
+    <img class="gm-age-logo" src="goetz-money-wordmark.png" alt="Goetz Money">
+    <div class="gm-age-badge">18+ ONLY</div>
+    <p class="gm-age-text" id="gmAgeText">This site &mdash; and the streams behind it &mdash; run on adult language and grown-up content.</p>
+    <p class="gm-age-sub">Checking the box is the whole door policy. It stays checked on this device.</p>
+    <label class="gm-age-check" for="gmAgeCheck">
+      <input type="checkbox" id="gmAgeCheck">
+      <span class="gm-age-check-label">I am 18 years of age or older</span>
+    </label>
+    <button class="gm-age-enter" id="gmAgeEnter" type="button" disabled>ENTER</button>
+    <p class="gm-age-mistake">Landed here by mistake? No hard feelings &mdash; just head back the way you came.</p>
+  </div>
+</div>
+<script>
+/* 18+ gate wiring: ENTER stays disabled until the box is checked. Confirming
+   stores gm_age_confirmed in localStorage, so it's once per browser/device. */
+(function(){
+  var gate=document.getElementById('gmAgeGate');
+  if(!gate){return;}
+  if(!document.documentElement.classList.contains('gm-age-locked')){
+    if(gate.parentNode){gate.parentNode.removeChild(gate);}
+    return;
+  }
+  var box=document.getElementById('gmAgeCheck');
+  var btn=document.getElementById('gmAgeEnter');
+  box.addEventListener('change',function(){btn.disabled=!box.checked;});
+  btn.addEventListener('click',function(){
+    if(!box.checked){return;}
+    try{localStorage.setItem('gm_age_confirmed','1');}catch(e){}
+    document.documentElement.classList.remove('gm-age-locked');
+    if(gate.parentNode){gate.parentNode.removeChild(gate);}
+  });
+})();
+</script>
+<nav class="gm-nav" aria-label="Site sections">
+  <div class="gm-nav-inner">
+    <a class="gm-nav-brand" href="index.html" aria-label="Goetz Money — home">
+      <img src="coin-badge.png" alt="">
+      <span>Goetz<b>Money</b></span>
+    </a>
+    <div class="gm-nav-links" id="gm-nav-links">
+      <a href="index.html">Home</a>
+      <a href="gaming.html">Gaming</a>
+      <a href="basketball.html">Basketball</a>
+      <a href="tabletop.html">Tabletop Gaming</a>
+      <a href="glitchlings.html" class="active">Glitchlings</a>
+      <a class="gm-nav-live" href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Watch Live</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="binder-head">
+    <h1 class="display">The Dex</h1>
+    <p class="sub">Every Glitchling species in Series 1 — the ones a viewer has registered in full color, the rest still hiding in the static. Type <span class="mono">!save</span> in chat when one appears.</p>
+  </div>
+  <div id="app"><p class="empty">Opening the Dex…</p></div>
+  <p class="foot">Your cards live in <a href="binder.html">The Binder</a> · Data refreshes after shows.</p>
+</main>
+<script src="glitchlings-data.js"></script>
+<script>
+(function () {
+  var app = document.getElementById('app');
+  var byId = {};
+  var catalog = (typeof GLITCHLINGS !== "undefined" && GLITCHLINGS) || [];
+  catalog.forEach(function (g) { byId[g.id] = g; });
+  var total = catalog.length;
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  fetch('binder-data.json', { cache: 'no-store' })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      var users = data.users || {};
+      var u = new URLSearchParams(location.search).get('u');
+      if (u && users[u.toLowerCase()]) { renderUser(users, u.toLowerCase()); } else { renderIndex(users); }
+    })
+    .catch(function () { app.innerHTML = '<p class="empty">The Dex would not open. Try again in a bit.</p>'; });
+
+  function dexStats(rec) {
+    var c = (rec && rec.creatures) || {};
+    var registered = 0, catches = 0, shiny = 0;
+    Object.keys(c).forEach(function (id) {
+      var e = c[id] || {};
+      catches += e.count || 0;
+      shiny += e.shiny || 0;
+      if (byId[id]) registered += 1;
+    });
+    return { registered: registered, catches: catches, shiny: shiny };
+  }
+
+  /* Battle badges: renders ONLY when the user's record carries badge data —
+     a non-empty badges array and/or a numeric wins count. No data, no row. */
+  function badgeRow(rec) {
+    var parts = [];
+    if (rec && Array.isArray(rec.badges)) {
+      rec.badges.forEach(function (b) { if (b) parts.push('<span class="badge-chip">' + esc(b) + '</span>'); });
+    }
+    if (rec && typeof rec.wins === 'number') {
+      parts.push('<span class="badge-chip">' + rec.wins + (rec.wins === 1 ? ' win' : ' wins') + '</span>');
+    }
+    if (!parts.length) return '';
+    return '<div class="badges-row">' + parts.join('') + '</div>';
+  }
+
+  function renderIndex(users) {
+    var names = Object.keys(users).sort(function (a, b) {
+      var sa = dexStats(users[a]), sb = dexStats(users[b]);
+      return (sb.registered - sa.registered) || (sb.catches - sa.catches);
+    });
+    if (!names.length) { app.innerHTML = '<p class="empty">No catches yet. The Dex opens on the next stream.</p>'; return; }
+    var html = '<p class="crosslink"><a href="binder.html">&larr; Back to the binder</a></p><div class="collectors">';
+    names.forEach(function (n) {
+      var s = dexStats(users[n]);
+      html += '<a class="collector" href="dex.html?u=' + encodeURIComponent(n) + '"><span class="who">@' + esc(n) + '</span><span class="stat">' + s.registered + ' / ' + total + ' registered · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</span></a>';
+    });
+    app.innerHTML = html + '</div>';
+  }
+
+  function renderUser(users, u) {
+    var rec = users[u];
+    var s = dexStats(rec);
+    var html = '<p class="binder-user">@<b>' + esc(u) + '</b></p>';
+    html += '<div class="progress"><div style="width:' + Math.round(total ? 100 * s.registered / total : 0) + '%"></div></div>';
+    html += '<p class="progress-label">' + s.registered + ' of ' + total + ' species registered · ' + s.catches + ' caught' + (s.shiny ? ' · ' + s.shiny + ' shiny' : '') + '</p>';
+    html += badgeRow(rec);
+    html += '<p class="crosslink"><a href="binder.html?u=' + encodeURIComponent(u) + '">&larr; Back to the binder</a></p>';
+    html += '<div class="binder-page"><div class="pocket-grid">';
+    catalog.forEach(function (g) {
+      var e = rec.creatures && rec.creatures[g.id];
+      if (e) {
+        var badges = ['×' + (e.count || 0)];
+        if (e.shiny) badges.push('✦ ' + e.shiny + ' shiny');
+        html += '<div class="pocket"><div class="card"><img src="' + esc(g.art) + '" alt="' + esc(g.name) + '"><div class="nm">' + esc(g.name) + '</div><div class="meta">' + esc(g.type) + ' · ' + esc(g.tier) + '</div><div class="badges">' + badges.join(' · ') + '</div></div></div>';
+      } else {
+        html += '<div class="pocket uncaught"><div class="card"><img src="' + esc(g.art) + '" alt="Unregistered Glitchling"><div class="nm">???</div><div class="meta">Not registered</div><div class="badges"></div></div></div>';
+      }
+    });
+    app.innerHTML = html + '</div></div>';
+  }
+})();
+</script>
+
+</body>
+</html>
