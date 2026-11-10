@@ -52,6 +52,10 @@
   button:active{transform:translateY(1px);}
   .msg{margin-top:14px; font-size:1rem; line-height:1.5; min-height:1.2em;}
   .msg.bad{color:var(--bad);} .msg.ok{color:var(--ok);} .msg.dim{color:var(--dim);}
+  .specialtag{
+    display:none; margin:0 auto 10px; width:fit-content; background:linear-gradient(180deg, var(--gold-soft), var(--gold));
+    color:#2a1a00; font-weight:900; letter-spacing:.14em; font-size:.75rem; padding:6px 14px; border-radius:999px;
+  }
   #reveal{display:none; text-align:center; margin-top:6px;}
   #reveal img{
     width:220px; height:220px; object-fit:contain; image-rendering:auto;
@@ -98,19 +102,21 @@
     <p id="msg" class="msg dim">Codes are one word, spoken at the end of the clip.</p>
 
     <div id="reveal">
+      <div class="specialtag" id="specialTag">★ SPECIAL CLAIM</div>
       <img id="sprite" alt="Your Glitchling">
       <div class="species" id="speciesName"></div>
       <div class="type" id="speciesType"></div>
-      <p class="eggline">A free common Glitchling, reserved as an egg in your name
-      once you claim it in chat:</p>
+      <p class="eggline" id="eggLine">This is your Glitchling — the exact one from your clip.
+      It's reserved as an egg in your name once you claim it in chat:</p>
     </div>
 
     <div class="how" id="how">
       <p>🎉 <b>Claim it on hatch night:</b></p>
       <p style="margin-top:8px">Be in chat during <b id="hatchWhen">Sunday Night Gaming</b> and type
       <code id="hatchCmd">!hatch CODE</code></p>
-      <p style="margin-top:8px">Your egg hatches <b>live on stream</b> and the Glitchling is yours to keep.
+      <p style="margin-top:8px" id="hatchLine">Your egg hatches <b>live on stream</b> and the Glitchling is yours to keep.
       No show, no hatch — eggs only open that Sunday.</p>
+      <p style="margin-top:8px; color:var(--dim); font-size:.88rem">This code expires at the Sunday stream after its clip was posted.</p>
     </div>
 
     <div class="follow" id="follow">
@@ -172,12 +178,26 @@ if (typeof document !== "undefined") {
       msg.className = "msg bad";
       msg.textContent = "This egg has gone quiet — codes hatch the Sunday after their clip. Catch the next clip for a fresh code.";
     } else if (state === "valid") {
+      var isPack = entry.kind === "pack";
+      var tag = document.getElementById("specialTag");
+      if (entry.special) {
+        tag.textContent = "★ SPECIAL CLAIM" + (entry.reason ? " — " + entry.reason : "");
+        tag.style.display = "block";
+      } else { tag.style.display = "none"; }
       msg.className = "msg ok";
-      msg.textContent = "Found it! Here's what's inside your egg:";
+      msg.textContent = isPack ? "Found it! You've got a pack:" : "Found it! This is your Glitchling:";
       document.getElementById("sprite").src = entry.sprite;
       document.getElementById("sprite").alt = entry.species_name;
-      document.getElementById("speciesName").textContent = entry.species_name;
-      document.getElementById("speciesType").textContent = entry.type + " type · Common";
+      document.getElementById("speciesName").textContent = isPack ? "You've got a pack" : entry.species_name;
+      document.getElementById("speciesType").textContent = isPack
+        ? "Glitchling Card Pack · 3 cards"
+        : entry.type + " type · " + (entry.tier || "Common");
+      document.getElementById("eggLine").textContent = isPack
+        ? "A Glitchling card pack with your name on it, waiting to be opened live once you claim it in chat:"
+        : "This is your Glitchling — the exact one from your clip. It's reserved as an egg in your name once you claim it in chat:";
+      document.getElementById("hatchLine").innerHTML = isPack
+        ? "Your pack is credited to you <b>live on stream</b> and opens right there. No show, no pack — packs only open that Sunday."
+        : "Your egg hatches <b>live on stream</b> and the Glitchling is yours to keep. No show, no hatch — eggs only open that Sunday.";
       document.getElementById("hatchWhen").textContent = entry.hatch_stream;
       document.getElementById("hatchCmd").textContent = "!hatch " + code;
       reveal.style.display = "block"; how.style.display = "block"; follow.style.display = "block";
