@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-10T21:46:40+00:00",
+ "updated": "2026-11-10T21:55:24+00:00",
  "codes": {
   "STORM": {
    "species": "pingsqueak",
@@ -7,7 +7,19 @@
    "type": "Volt",
    "sprite": "assets/hatch/pingsqueak.png",
    "expires": "2026-11-15",
-   "hatch_stream": "Sunday, November 15, 2026 \u00b7 8:00 PM CT"
+   "hatch_stream": "Sunday, November 15, 2026 \u00b7 8:00 PM CT",
+   "kind": "creature",
+   "tier": "Common"
+  },
+  "BOOSTER": {
+   "expires": "2026-11-15",
+   "hatch_stream": "Sunday, November 15, 2026 \u00b7 8:00 PM CT",
+   "kind": "pack",
+   "species": null,
+   "species_name": "Glitchling Card Pack",
+   "type": "Pack",
+   "tier": "Pack",
+   "sprite": "assets/hatch/pack.png"
   }
  }
 }
