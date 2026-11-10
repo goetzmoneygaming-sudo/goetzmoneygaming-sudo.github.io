@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch to Hatch — GoetzMoney</title>
+<meta name="description" content="Got a code from a GoetzMoney clip? Reveal your Glitchling egg and hatch it live on Sunday Night Gaming.">
+<style>
+  :root{
+    --storm-1:#1b1035; --storm-2:#2d1b57; --storm-3:#4b2a85;
+    --gold:#f5c542; --gold-soft:#ffd977; --ink:#f3efff; --dim:#b9aede;
+    --card:#241447; --line:#5a3fa3; --bad:#ff8f8f; --ok:#9df0b3;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:"Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    color:var(--ink); min-height:100vh; padding:22px 16px 40px;
+    background:
+      radial-gradient(120% 60% at 85% -5%, rgba(245,197,66,.20) 0%, rgba(245,197,66,0) 55%),
+      radial-gradient(90% 55% at 8% 12%, rgba(120,80,220,.35) 0%, rgba(120,80,220,0) 60%),
+      radial-gradient(140% 80% at 50% 115%, rgba(46,27,94,.9) 0%, rgba(46,27,94,0) 60%),
+      linear-gradient(165deg, var(--storm-3) 0%, var(--storm-2) 42%, var(--storm-1) 100%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:520px; margin:0 auto;}
+  header{text-align:center; margin:10px 0 6px;}
+  .brand{font-weight:800; letter-spacing:.14em; font-size:.8rem; color:var(--gold-soft); text-transform:uppercase;}
+  h1{
+    font-size:2.35rem; line-height:1.05; font-weight:900; letter-spacing:.01em; margin:8px 0 6px;
+    background:linear-gradient(180deg,#fff 20%, var(--gold-soft) 55%, var(--gold) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 2px 22px rgba(0,0,0,.25);
+  }
+  .sub{color:var(--dim); font-size:.98rem; line-height:1.45;}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)), var(--card);
+    border:1px solid var(--line); border-radius:16px; padding:20px 18px; margin-top:18px;
+    box-shadow:0 14px 34px rgba(0,0,0,.4);
+  }
+  label{display:block; font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:8px; font-weight:700;}
+  .row{display:flex; gap:10px;}
+  input{
+    flex:1; min-width:0; background:#170d31; border:1px solid var(--line); border-radius:10px;
+    color:#fff; font-size:1.25rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+    padding:13px 14px; outline:none;
+  }
+  input:focus{border-color:var(--gold);}
+  button{
+    background:linear-gradient(180deg, var(--gold-soft), var(--gold)); color:#2a1a00; border:0; border-radius:10px;
+    font-weight:900; font-size:1rem; padding:13px 18px; cursor:pointer; letter-spacing:.02em;
+  }
+  button:active{transform:translateY(1px);}
+  .msg{margin-top:14px; font-size:1rem; line-height:1.5; min-height:1.2em;}
+  .msg.bad{color:var(--bad);} .msg.ok{color:var(--ok);} .msg.dim{color:var(--dim);}
+  #reveal{display:none; text-align:center; margin-top:6px;}
+  #reveal img{
+    width:220px; height:220px; object-fit:contain; image-rendering:auto;
+    filter:drop-shadow(0 10px 22px rgba(0,0,0,.55));
+  }
+  .species{font-size:1.7rem; font-weight:900; margin-top:4px;}
+  .type{color:var(--gold-soft); font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:.8rem; margin-top:2px;}
+  .eggline{color:var(--dim); margin-top:10px; line-height:1.5;}
+  .how{
+    display:none; text-align:left; margin-top:16px; background:#170d31; border:1px solid var(--line);
+    border-radius:12px; padding:14px 16px; line-height:1.55; font-size:.98rem;
+  }
+  .how code{
+    background:#2d1b57; color:var(--gold-soft); padding:2px 8px; border-radius:6px;
+    font-weight:800; letter-spacing:.06em; font-size:1.05rem; white-space:nowrap;
+  }
+  .follow{display:none; margin-top:16px; text-align:center;}
+  .follow a{
+    display:inline-block; background:#9146ff; color:#fff; text-decoration:none; font-weight:800;
+    padding:12px 20px; border-radius:10px;
+  }
+  .follow p{color:var(--dim); font-size:.9rem; margin-bottom:10px;}
+  footer{margin-top:26px; text-align:center; color:var(--dim); font-size:.8rem; line-height:1.6;}
+  footer .plus{color:var(--gold-soft); font-weight:800;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">GoetzMoney · Sunday Night Gaming</div>
+    <h1>WATCH TO HATCH</h1>
+    <p class="sub">Every clip hides an egg. Enter the code from the end of the clip,
+    meet your Glitchling, then hatch it <b>live</b> on Sunday night.</p>
+  </header>
+
+  <div class="card">
+    <form id="claimForm">
+      <label for="codeInput">Your clip code</label>
+      <div class="row">
+        <input id="codeInput" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. STORM">
+        <button type="submit">Reveal</button>
+      </div>
+    </form>
+    <p id="msg" class="msg dim">Codes are one word, spoken at the end of the clip.</p>
+
+    <div id="reveal">
+      <img id="sprite" alt="Your Glitchling">
+      <div class="species" id="speciesName"></div>
+      <div class="type" id="speciesType"></div>
+      <p class="eggline">A free common Glitchling, reserved as an egg in your name
+      once you claim it in chat:</p>
+    </div>
+
+    <div class="how" id="how">
+      <p>🎉 <b>Claim it on hatch night:</b></p>
+      <p style="margin-top:8px">Be in chat during <b id="hatchWhen">Sunday Night Gaming</b> and type
+      <code id="hatchCmd">!hatch CODE</code></p>
+      <p style="margin-top:8px">Your egg hatches <b>live on stream</b> and the Glitchling is yours to keep.
+      No show, no hatch — eggs only open that Sunday.</p>
+    </div>
+
+    <div class="follow" id="follow">
+      <p>Don't miss hatch night — it only happens once.</p>
+      <a href="https://www.twitch.tv/goetzmoney" target="_blank" rel="noopener">Follow GoetzMoney on Twitch</a>
+    </div>
+  </div>
+
+  <footer>
+    <p><span class="plus">18+</span> · Watch to Hatch codes are free — no purchase, ever.</p>
+    <p>twitch.tv/goetzmoney · Sundays 8:00 PM CT</p>
+  </footer>
+</div>
+
+<script>
+/* ---- pure logic (also exercised by the Node self-check) ---- */
+function normalizeCode(raw) {
+  return (raw || "").trim().toUpperCase().replace(/\s+/g, "");
+}
+function todayISO(d) {
+  d = d || new Date();
+  var m = String(d.getMonth() + 1).padStart(2, "0");
+  var day = String(d.getDate()).padStart(2, "0");
+  return d.getFullYear() + "-" + m + "-" + day;
+}
+/* entry: the codes.json record for a code, or undefined.
+   Returns {state: "unknown"|"expired"|"valid", entry} */
+function decide(entry, today) {
+  if (!entry) return { state: "unknown", entry: null };
+  if (today > entry.expires) return { state: "expired", entry: entry };
+  return { state: "valid", entry: entry };
+}
+
+/* ---- page wiring ---- */
+if (typeof document !== "undefined") {
+  var params = new URLSearchParams(window.location.search);
+  var input = document.getElementById("codeInput");
+  var prefilled = params.get("code");
+  if (prefilled) input.value = normalizeCode(prefilled);
+
+  var codesCache = null;
+  function loadCodes() {
+    if (codesCache) return Promise.resolve(codesCache);
+    return fetch("codes.json", { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("codes fetch " + r.status); return r.json(); })
+      .then(function (data) { codesCache = data; return data; });
+  }
+
+  function show(state, entry, code) {
+    var msg = document.getElementById("msg");
+    var reveal = document.getElementById("reveal");
+    var how = document.getElementById("how");
+    var follow = document.getElementById("follow");
+    reveal.style.display = "none"; how.style.display = "none"; follow.style.display = "none";
+    if (state === "unknown") {
+      msg.className = "msg bad";
+      msg.textContent = "That code doesn't ring a bell. Check the end of the clip and try again — codes are one word.";
+    } else if (state === "expired") {
+      msg.className = "msg bad";
+      msg.textContent = "This egg has gone quiet — codes hatch the Sunday after their clip. Catch the next clip for a fresh code.";
+    } else if (state === "valid") {
+      msg.className = "msg ok";
+      msg.textContent = "Found it! Here's what's inside your egg:";
+      document.getElementById("sprite").src = entry.sprite;
+      document.getElementById("sprite").alt = entry.species_name;
+      document.getElementById("speciesName").textContent = entry.species_name;
+      document.getElementById("speciesType").textContent = entry.type + " type · Common";
+      document.getElementById("hatchWhen").textContent = entry.hatch_stream;
+      document.getElementById("hatchCmd").textContent = "!hatch " + code;
+      reveal.style.display = "block"; how.style.display = "block"; follow.style.display = "block";
+    }
+  }
+
+  document.getElementById("claimForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var code = normalizeCode(input.value);
+    var msg = document.getElementById("msg");
+    if (!code) { msg.className = "msg bad"; msg.textContent = "Type the code from the end of the clip first."; return; }
+    msg.className = "msg dim"; msg.textContent = "Checking the nest…";
+    loadCodes().then(function (data) {
+      var result = decide((data.codes || {})[code], todayISO());
+      show(result.state, result.entry, code);
+    }).catch(function () {
+      msg.className = "msg bad";
+      msg.textContent = "The nest is unreachable right now. Try again in a moment.";
+    });
+  });
+
+  if (prefilled) {
+    document.getElementById("claimForm").dispatchEvent(new Event("submit", { cancelable: true }));
+  }
+}
+</script>
+</body>
+</html>
